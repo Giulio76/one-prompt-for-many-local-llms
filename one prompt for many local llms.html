@@ -1,0 +1,2220 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>one prompt for many local llms - Giulio76 - ver 1 @ 250420_235732</title>
+
+	<script>
+/* W3.JS 1.04 April 2019 by w3schools.com */
+"use strict";
+var w3 = {};
+w3.hide = function (sel) {
+  w3.hideElements(w3.getElements(sel));
+};
+w3.hideElements = function (elements) {
+  var i, l = elements.length;
+  for (i = 0; i < l; i++) {
+    w3.hideElement(elements[i]);
+  }
+};
+w3.hideElement = function (element) {
+  w3.styleElement(element, "display", "none");
+};
+w3.show = function (sel, a) {
+  var elements = w3.getElements(sel);
+  if (a) {w3.hideElements(elements);}
+  w3.showElements(elements);
+};
+w3.showElements = function (elements) {
+  var i, l = elements.length;
+  for (i = 0; i < l; i++) {
+    w3.showElement(elements[i]);
+  }
+};
+w3.showElement = function (element) {
+  w3.styleElement(element, "display", "block");
+};
+w3.addStyle = function (sel, prop, val) {
+  w3.styleElements(w3.getElements(sel), prop, val);
+};
+w3.styleElements = function (elements, prop, val) {
+  var i, l = elements.length;
+  for (i = 0; i < l; i++) {    
+    w3.styleElement(elements[i], prop, val);
+  }
+};
+w3.styleElement = function (element, prop, val) {
+  element.style.setProperty(prop, val);
+};
+w3.toggleShow = function (sel) {
+  var i, x = w3.getElements(sel), l = x.length;
+  for (i = 0; i < l; i++) {    
+    if (x[i].style.display == "none") {
+      w3.styleElement(x[i], "display", "block");
+    } else {
+      w3.styleElement(x[i], "display", "none");
+    }
+  }
+};
+w3.addClass = function (sel, name) {
+  w3.addClassElements(w3.getElements(sel), name);
+};
+w3.addClassElements = function (elements, name) {
+  var i, l = elements.length;
+  for (i = 0; i < l; i++) {
+    w3.addClassElement(elements[i], name);
+  }
+};
+w3.addClassElement = function (element, name) {
+  var i, arr1, arr2;
+  arr1 = element.className.split(" ");
+  arr2 = name.split(" ");
+  for (i = 0; i < arr2.length; i++) {
+    if (arr1.indexOf(arr2[i]) == -1) {element.className += " " + arr2[i];}
+  }
+};
+w3.removeClass = function (sel, name) {
+  w3.removeClassElements(w3.getElements(sel), name);
+};
+w3.removeClassElements = function (elements, name) {
+  var i, l = elements.length, arr1, arr2, j;
+  for (i = 0; i < l; i++) {
+    w3.removeClassElement(elements[i], name);
+  }
+};
+w3.removeClassElement = function (element, name) {
+  var i, arr1, arr2;
+  arr1 = element.className.split(" ");
+  arr2 = name.split(" ");
+  for (i = 0; i < arr2.length; i++) {
+    while (arr1.indexOf(arr2[i]) > -1) {
+      arr1.splice(arr1.indexOf(arr2[i]), 1);     
+    }
+  }
+  element.className = arr1.join(" ");
+};
+w3.toggleClass = function (sel, c1, c2) {
+  w3.toggleClassElements(w3.getElements(sel), c1, c2);
+};
+w3.toggleClassElements = function (elements, c1, c2) {
+  var i, l = elements.length;
+  for (i = 0; i < l; i++) {    
+    w3.toggleClassElement(elements[i], c1, c2);
+  }
+};
+w3.toggleClassElement = function (element, c1, c2) {
+  var t1, t2, t1Arr, t2Arr, j, arr, allPresent;
+  t1 = (c1 || "");
+  t2 = (c2 || "");
+  t1Arr = t1.split(" ");
+  t2Arr = t2.split(" ");
+  arr = element.className.split(" ");
+  if (t2Arr.length == 0) {
+    allPresent = true;
+    for (j = 0; j < t1Arr.length; j++) {
+      if (arr.indexOf(t1Arr[j]) == -1) {allPresent = false;}
+    }
+    if (allPresent) {
+      w3.removeClassElement(element, t1);
+    } else {
+      w3.addClassElement(element, t1);
+    }
+  } else {
+    allPresent = true;
+    for (j = 0; j < t1Arr.length; j++) {
+      if (arr.indexOf(t1Arr[j]) == -1) {allPresent = false;}
+    }
+    if (allPresent) {
+      w3.removeClassElement(element, t1);
+      w3.addClassElement(element, t2);          
+    } else {
+      w3.removeClassElement(element, t2);        
+      w3.addClassElement(element, t1);
+    }
+  }
+};
+w3.getElements = function (id) {
+  if (typeof id == "object") {
+    return [id];
+  } else {
+    return document.querySelectorAll(id);
+  }
+};
+w3.filterHTML = function(id, sel, filter) {
+  var a, b, c, i, ii, iii, hit;
+  a = w3.getElements(id);
+  for (i = 0; i < a.length; i++) {
+    b = a[i].querySelectorAll(sel);
+    for (ii = 0; ii < b.length; ii++) {
+      hit = 0;
+      if (b[ii].innerText.toUpperCase().indexOf(filter.toUpperCase()) > -1) {
+        hit = 1;
+      }
+      c = b[ii].getElementsByTagName("*");
+      for (iii = 0; iii < c.length; iii++) {
+        if (c[iii].innerText.toUpperCase().indexOf(filter.toUpperCase()) > -1) {
+          hit = 1;
+        }
+      }
+      if (hit == 1) {
+        b[ii].style.display = "";
+      } else {
+        b[ii].style.display = "none";
+      }
+    }
+  }
+};
+w3.sortHTML = function(id, sel, sortvalue) {
+  var a, b, i, ii, y, bytt, v1, v2, cc, j;
+  a = w3.getElements(id);
+  for (i = 0; i < a.length; i++) {
+    for (j = 0; j < 2; j++) {
+      cc = 0;
+      y = 1;
+      while (y == 1) {
+        y = 0;
+        b = a[i].querySelectorAll(sel);
+        for (ii = 0; ii < (b.length - 1); ii++) {
+          bytt = 0;
+          if (sortvalue) {
+            v1 = b[ii].querySelector(sortvalue).innerText;
+            v2 = b[ii + 1].querySelector(sortvalue).innerText;
+          } else {
+            v1 = b[ii].innerText;
+            v2 = b[ii + 1].innerText;
+          }
+          v1 = v1.toLowerCase();
+          v2 = v2.toLowerCase();
+          if ((j == 0 && (v1 > v2)) || (j == 1 && (v1 < v2))) {
+            bytt = 1;
+            break;
+          }
+        }
+        if (bytt == 1) {
+          b[ii].parentNode.insertBefore(b[ii + 1], b[ii]);
+          y = 1;
+          cc++;
+        }
+      }
+      if (cc > 0) {break;}
+    }
+  }
+};
+w3.slideshow = function (sel, ms, func) {
+  var i, ss, x = w3.getElements(sel), l = x.length;
+  ss = {};
+  ss.current = 1;
+  ss.x = x;
+  ss.ondisplaychange = func;
+  if (!isNaN(ms) || ms == 0) {
+    ss.milliseconds = ms;
+  } else {
+    ss.milliseconds = 1000;
+  }
+  ss.start = function() {
+    ss.display(ss.current)
+    if (ss.ondisplaychange) {ss.ondisplaychange();}
+    if (ss.milliseconds > 0) {
+      window.clearTimeout(ss.timeout);
+      ss.timeout = window.setTimeout(ss.next, ss.milliseconds);
+    }
+  };
+  ss.next = function() {
+    ss.current += 1;
+    if (ss.current > ss.x.length) {ss.current = 1;}
+    ss.start();
+  };
+  ss.previous = function() {
+    ss.current -= 1;
+    if (ss.current < 1) {ss.current = ss.x.length;}
+    ss.start();
+  };
+  ss.display = function (n) {
+    w3.styleElements(ss.x, "display", "none");
+    w3.styleElement(ss.x[n - 1], "display", "block");
+  }
+  ss.start();
+  return ss;
+};
+w3.includeHTML = function(cb) {
+  var z, i, elmnt, file, xhttp;
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          elmnt.removeAttribute("w3-include-html");
+          w3.includeHTML(cb);
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      return;
+    }
+  }
+  if (cb) cb();
+};
+w3.getHttpData = function (file, func) {
+  w3.http(file, function () {
+    if (this.readyState == 4 && this.status == 200) {
+      func(this.responseText);
+    }
+  });
+};
+w3.getHttpObject = function (file, func) {
+  w3.http(file, function () {
+    if (this.readyState == 4 && this.status == 200) {
+      func(JSON.parse(this.responseText));
+    }
+  });
+};
+w3.displayHttp = function (id, file) {
+  w3.http(file, function () {
+    if (this.readyState == 4 && this.status == 200) {
+      w3.displayObject(id, JSON.parse(this.responseText));
+    }
+  });
+};
+w3.http = function (target, readyfunc, xml, method) {
+  var httpObj;
+  if (!method) {method = "GET"; }
+  if (window.XMLHttpRequest) {
+    httpObj = new XMLHttpRequest();
+  } else if (window.ActiveXObject) {
+    httpObj = new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  if (httpObj) {
+    if (readyfunc) {httpObj.onreadystatechange = readyfunc;}
+    httpObj.open(method, target, true);
+    httpObj.send(xml);
+  }
+};
+w3.getElementsByAttribute = function (x, att) {
+  var arr = [], arrCount = -1, i, l, y = x.getElementsByTagName("*"), z = att.toUpperCase();
+  l = y.length;
+  for (i = -1; i < l; i += 1) {
+    if (i == -1) {y[i] = x;}
+    if (y[i].getAttribute(z) !== null) {arrCount += 1; arr[arrCount] = y[i];}
+  }
+  return arr;
+};  
+w3.dataObject = {},
+w3.displayObject = function (id, data) {
+  var htmlObj, htmlTemplate, html, arr = [], a, l, rowClone, x, j, i, ii, cc, repeat, repeatObj, repeatX = "";
+  htmlObj = document.getElementById(id);
+  htmlTemplate = init_template(id, htmlObj);
+  html = htmlTemplate.cloneNode(true);
+  arr = w3.getElementsByAttribute(html, "w3-repeat");
+  l = arr.length;
+  for (j = (l - 1); j >= 0; j -= 1) {
+    cc = arr[j].getAttribute("w3-repeat").split(" ");
+    if (cc.length == 1) {
+      repeat = cc[0];
+    } else {
+      repeatX = cc[0];
+      repeat = cc[2];
+    }
+    arr[j].removeAttribute("w3-repeat");
+    repeatObj = data[repeat];
+    if (repeatObj && typeof repeatObj == "object" && repeatObj.length != "undefined") {
+      i = 0;
+      for (x in repeatObj) {
+        i += 1;
+        rowClone = arr[j];
+        rowClone = w3_replace_curly(rowClone, "element", repeatX, repeatObj[x]);
+        a = rowClone.attributes;
+        for (ii = 0; ii < a.length; ii += 1) {
+          a[ii].value = w3_replace_curly(a[ii], "attribute", repeatX, repeatObj[x]).value;
+        }
+        (i === repeatObj.length) ? arr[j].parentNode.replaceChild(rowClone, arr[j]) : arr[j].parentNode.insertBefore(rowClone, arr[j]);
+      }
+    } else {
+      console.log("w3-repeat must be an array. " + repeat + " is not an array.");
+      continue;
+    }
+  }
+  html = w3_replace_curly(html, "element");
+  htmlObj.parentNode.replaceChild(html, htmlObj);
+  function init_template(id, obj) {
+    var template;
+    template = obj.cloneNode(true);
+    if (w3.dataObject.hasOwnProperty(id)) {return w3.dataObject[id];}
+    w3.dataObject[id] = template;
+    return template;
+  }
+  function w3_replace_curly(elmnt, typ, repeatX, x) {
+    var value, rowClone, pos1, pos2, originalHTML, lookFor, lookForARR = [], i, cc, r;
+    rowClone = elmnt.cloneNode(true);
+    pos1 = 0;
+    while (pos1 > -1) {
+      originalHTML = (typ == "attribute") ? rowClone.value : rowClone.innerHTML;
+      pos1 = originalHTML.indexOf("{{", pos1);
+      if (pos1 === -1) {break;}
+      pos2 = originalHTML.indexOf("}}", pos1 + 1);
+      lookFor = originalHTML.substring(pos1 + 2, pos2);
+      lookForARR = lookFor.split("||");
+      value = undefined;
+      for (i = 0; i < lookForARR.length; i += 1) {
+        lookForARR[i] = lookForARR[i].replace(/^\s+|\s+$/gm, ''); //trim
+        if (x) {value = x[lookForARR[i]];}
+        if (value == undefined && data) {value = data[lookForARR[i]];}
+        if (value == undefined) {
+          cc = lookForARR[i].split(".");
+          if (cc[0] == repeatX) {value = x[cc[1]]; }
+        }
+        if (value == undefined) {
+          if (lookForARR[i] == repeatX) {value = x;}
+        }
+        if (value == undefined) {
+          if (lookForARR[i].substr(0, 1) == '"') {
+            value = lookForARR[i].replace(/"/g, "");
+          } else if (lookForARR[i].substr(0,1) == "'") {
+            value = lookForARR[i].replace(/'/g, "");
+          }
+        }
+        if (value != undefined) {break;}
+      }
+      if (value != undefined) {
+        r = "{{" + lookFor + "}}";
+        if (typ == "attribute") {
+          rowClone.value = rowClone.value.replace(r, value);
+        } else {
+          w3_replace_html(rowClone, r, value);
+        }
+      }
+      pos1 = pos1 + 1;
+    }
+    return rowClone;
+  }
+  function w3_replace_html(a, r, result) {
+    var b, l, i, a, x, j;
+    if (a.hasAttributes()) {
+      b = a.attributes;
+      l = b.length;
+      for (i = 0; i < l; i += 1) {
+        if (b[i].value.indexOf(r) > -1) {b[i].value = b[i].value.replace(r, result);}
+      }
+    }
+    x = a.getElementsByTagName("*");
+    l = x.length;
+    a.innerHTML = a.innerHTML.replace(r, result);
+  }
+};	
+ 	</script>
+		
+		
+	<style>
+/* W3.CSS 4.15 December 2020 by Jan Egil and Borge Refsnes */
+html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}
+/* Extract from normalize.css by Nicolas Gallagher and Jonathan Neal git.io/normalize */
+html{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}
+article,aside,details,figcaption,figure,footer,header,main,menu,nav,section{display:block}summary{display:list-item}
+audio,canvas,progress,video{display:inline-block}progress{vertical-align:baseline}
+audio:not([controls]){display:none;height:0}[hidden],template{display:none}
+a{background-color:transparent}a:active,a:hover{outline-width:0}
+abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}
+b,strong{font-weight:bolder}dfn{font-style:italic}mark{background:#ff0;color:#000}
+small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sub{bottom:-0.25em}sup{top:-0.5em}figure{margin:1em 40px}img{border-style:none}
+code,kbd,pre,samp{font-family:monospace,monospace;font-size:1em}hr{box-sizing:content-box;height:0;overflow:visible}
+button,input,select,textarea,optgroup{font:inherit;margin:0}optgroup{font-weight:bold}
+button,input{overflow:visible}button,select{text-transform:none}
+button,[type=button],[type=reset],[type=submit]{-webkit-appearance:button}
+button::-moz-focus-inner,[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner{border-style:none;padding:0}
+button:-moz-focusring,[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring{outline:1px dotted ButtonText}
+fieldset{border:1px solid #c0c0c0;margin:0 2px;padding:.35em .625em .75em}
+legend{color:inherit;display:table;max-width:100%;padding:0;white-space:normal}textarea{overflow:auto}
+[type=checkbox],[type=radio]{padding:0}
+[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}
+[type=search]{-webkit-appearance:textfield;outline-offset:-2px}
+[type=search]::-webkit-search-decoration{-webkit-appearance:none}
+::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}
+/* End extract */
+html,body{font-family:Verdana,sans-serif;font-size:15px;line-height:1.5}html{overflow-x:hidden}
+h1{font-size:36px}h2{font-size:30px}h3{font-size:24px}h4{font-size:20px}h5{font-size:18px}h6{font-size:16px}
+.w3-serif{font-family:serif}.w3-sans-serif{font-family:sans-serif}.w3-cursive{font-family:cursive}.w3-monospace{font-family:monospace}
+h1,h2,h3,h4,h5,h6{font-family:"Segoe UI",Arial,sans-serif;font-weight:400;margin:10px 0}.w3-wide{letter-spacing:4px}
+hr{border:0;border-top:1px solid #eee;margin:20px 0}
+.w3-image{max-width:100%;height:auto}img{vertical-align:middle}a{color:inherit}
+.w3-table,.w3-table-all{border-collapse:collapse;border-spacing:0;width:100%;display:table}.w3-table-all{border:1px solid #ccc}
+.w3-bordered tr,.w3-table-all tr{border-bottom:1px solid #ddd}.w3-striped tbody tr:nth-child(even){background-color:#f1f1f1}
+.w3-table-all tr:nth-child(odd){background-color:#fff}.w3-table-all tr:nth-child(even){background-color:#f1f1f1}
+.w3-hoverable tbody tr:hover,.w3-ul.w3-hoverable li:hover{background-color:#ccc}.w3-centered tr th,.w3-centered tr td{text-align:center}
+.w3-table td,.w3-table th,.w3-table-all td,.w3-table-all th{padding:8px 8px;display:table-cell;text-align:left;vertical-align:top}
+.w3-table th:first-child,.w3-table td:first-child,.w3-table-all th:first-child,.w3-table-all td:first-child{padding-left:16px}
+.w3-btn,.w3-button{border:none;display:inline-block;padding:8px 16px;vertical-align:middle;overflow:hidden;text-decoration:none;color:inherit;background-color:inherit;text-align:center;cursor:pointer;white-space:nowrap}
+.w3-btn:hover{box-shadow:0 8px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19)}
+.w3-btn,.w3-button{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}   
+.w3-disabled,.w3-btn:disabled,.w3-button:disabled{cursor:not-allowed;opacity:0.3}.w3-disabled *,:disabled *{pointer-events:none}
+.w3-btn.w3-disabled:hover,.w3-btn:disabled:hover{box-shadow:none}
+.w3-badge,.w3-tag{background-color:#000;color:#fff;display:inline-block;padding-left:8px;padding-right:8px;text-align:center}.w3-badge{border-radius:50%}
+.w3-ul{list-style-type:none;padding:0;margin:0}.w3-ul li{padding:8px 16px;border-bottom:1px solid #ddd}.w3-ul li:last-child{border-bottom:none}
+.w3-tooltip,.w3-display-container{position:relative}.w3-tooltip .w3-text{display:none}.w3-tooltip:hover .w3-text{display:inline-block}
+.w3-ripple:active{opacity:0.5}.w3-ripple{transition:opacity 0s}
+.w3-input{padding:8px;display:block;border:none;border-bottom:1px solid #ccc;width:100%}
+.w3-select{padding:9px 0;width:100%;border:none;border-bottom:1px solid #ccc}
+.w3-dropdown-click,.w3-dropdown-hover{position:relative;display:inline-block;cursor:pointer}
+.w3-dropdown-hover:hover .w3-dropdown-content{display:block}
+.w3-dropdown-hover:first-child,.w3-dropdown-click:hover{background-color:#ccc;color:#000}
+.w3-dropdown-hover:hover > .w3-button:first-child,.w3-dropdown-click:hover > .w3-button:first-child{background-color:#ccc;color:#000}
+.w3-dropdown-content{cursor:auto;color:#000;background-color:#fff;display:none;position:absolute;min-width:160px;margin:0;padding:0;z-index:1}
+.w3-check,.w3-radio{width:24px;height:24px;position:relative;top:6px}
+.w3-sidebar{height:100%;width:200px;background-color:#fff;position:fixed!important;z-index:1;overflow:auto}
+.w3-bar-block .w3-dropdown-hover,.w3-bar-block .w3-dropdown-click{width:100%}
+.w3-bar-block .w3-dropdown-hover .w3-dropdown-content,.w3-bar-block .w3-dropdown-click .w3-dropdown-content{min-width:100%}
+.w3-bar-block .w3-dropdown-hover .w3-button,.w3-bar-block .w3-dropdown-click .w3-button{width:100%;text-align:left;padding:8px 16px}
+.w3-main,#main{transition:margin-left .4s}
+.w3-modal{z-index:3;display:none;padding-top:100px;position:fixed;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgb(0,0,0);background-color:rgba(0,0,0,0.4)}
+.w3-modal-content{margin:auto;background-color:#fff;position:relative;padding:0;outline:0;width:600px}
+.w3-bar{width:100%;overflow:hidden}.w3-center .w3-bar{display:inline-block;width:auto}
+.w3-bar .w3-bar-item{padding:8px 16px;float:left;width:auto;border:none;display:block;outline:0}
+.w3-bar .w3-dropdown-hover,.w3-bar .w3-dropdown-click{position:static;float:left}
+.w3-bar .w3-button{white-space:normal}
+.w3-bar-block .w3-bar-item{width:100%;display:block;padding:8px 16px;text-align:left;border:none;white-space:normal;float:none;outline:0}
+.w3-bar-block.w3-center .w3-bar-item{text-align:center}.w3-block{display:block;width:100%}
+.w3-responsive{display:block;overflow-x:auto}
+.w3-container:after,.w3-container:before,.w3-panel:after,.w3-panel:before,.w3-row:after,.w3-row:before,.w3-row-padding:after,.w3-row-padding:before,
+.w3-cell-row:before,.w3-cell-row:after,.w3-clear:after,.w3-clear:before,.w3-bar:before,.w3-bar:after{content:"";display:table;clear:both}
+.w3-col,.w3-half,.w3-third,.w3-twothird,.w3-threequarter,.w3-quarter{float:left;width:100%}
+.w3-col.s1{width:8.33333%}.w3-col.s2{width:16.66666%}.w3-col.s3{width:24.99999%}.w3-col.s4{width:33.33333%}
+.w3-col.s5{width:41.66666%}.w3-col.s6{width:49.99999%}.w3-col.s7{width:58.33333%}.w3-col.s8{width:66.66666%}
+.w3-col.s9{width:74.99999%}.w3-col.s10{width:83.33333%}.w3-col.s11{width:91.66666%}.w3-col.s12{width:99.99999%}
+@media (min-width:601px){.w3-col.m1{width:8.33333%}.w3-col.m2{width:16.66666%}.w3-col.m3,.w3-quarter{width:24.99999%}.w3-col.m4,.w3-third{width:33.33333%}
+.w3-col.m5{width:41.66666%}.w3-col.m6,.w3-half{width:49.99999%}.w3-col.m7{width:58.33333%}.w3-col.m8,.w3-twothird{width:66.66666%}
+.w3-col.m9,.w3-threequarter{width:74.99999%}.w3-col.m10{width:83.33333%}.w3-col.m11{width:91.66666%}.w3-col.m12{width:99.99999%}}
+@media (min-width:993px){.w3-col.l1{width:8.33333%}.w3-col.l2{width:16.66666%}.w3-col.l3{width:24.99999%}.w3-col.l4{width:33.33333%}
+.w3-col.l5{width:41.66666%}.w3-col.l6{width:49.99999%}.w3-col.l7{width:58.33333%}.w3-col.l8{width:66.66666%}
+.w3-col.l9{width:74.99999%}.w3-col.l10{width:83.33333%}.w3-col.l11{width:91.66666%}.w3-col.l12{width:99.99999%}}
+.w3-rest{overflow:hidden}.w3-stretch{margin-left:-16px;margin-right:-16px}
+.w3-content,.w3-auto{margin-left:auto;margin-right:auto}.w3-content{max-width:980px}.w3-auto{max-width:1140px}
+.w3-cell-row{display:table;width:100%}.w3-cell{display:table-cell}
+.w3-cell-top{vertical-align:top}.w3-cell-middle{vertical-align:middle}.w3-cell-bottom{vertical-align:bottom}
+.w3-hide{display:none!important}.w3-show-block,.w3-show{display:block!important}.w3-show-inline-block{display:inline-block!important}
+@media (max-width:1205px){.w3-auto{max-width:95%}}
+@media (max-width:600px){.w3-modal-content{margin:0 10px;width:auto!important}.w3-modal{padding-top:30px}
+.w3-dropdown-hover.w3-mobile .w3-dropdown-content,.w3-dropdown-click.w3-mobile .w3-dropdown-content{position:relative}	
+.w3-hide-small{display:none!important}.w3-mobile{display:block;width:100%!important}.w3-bar-item.w3-mobile,.w3-dropdown-hover.w3-mobile,.w3-dropdown-click.w3-mobile{text-align:center}
+.w3-dropdown-hover.w3-mobile,.w3-dropdown-hover.w3-mobile .w3-btn,.w3-dropdown-hover.w3-mobile .w3-button,.w3-dropdown-click.w3-mobile,.w3-dropdown-click.w3-mobile .w3-btn,.w3-dropdown-click.w3-mobile .w3-button{width:100%}}
+@media (max-width:768px){.w3-modal-content{width:500px}.w3-modal{padding-top:50px}}
+@media (min-width:993px){.w3-modal-content{width:900px}.w3-hide-large{display:none!important}.w3-sidebar.w3-collapse{display:block!important}}
+@media (max-width:992px) and (min-width:601px){.w3-hide-medium{display:none!important}}
+@media (max-width:992px){.w3-sidebar.w3-collapse{display:none}.w3-main{margin-left:0!important;margin-right:0!important}.w3-auto{max-width:100%}}
+.w3-top,.w3-bottom{position:fixed;width:100%;z-index:1}.w3-top{top:0}.w3-bottom{bottom:0}
+.w3-overlay{position:fixed;display:none;width:100%;height:100%;top:0;left:0;right:0;bottom:0;background-color:rgba(0,0,0,0.5);z-index:2}
+.w3-display-topleft{position:absolute;left:0;top:0}.w3-display-topright{position:absolute;right:0;top:0}
+.w3-display-bottomleft{position:absolute;left:0;bottom:0}.w3-display-bottomright{position:absolute;right:0;bottom:0}
+.w3-display-middle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%)}
+.w3-display-left{position:absolute;top:50%;left:0%;transform:translate(0%,-50%);-ms-transform:translate(-0%,-50%)}
+.w3-display-right{position:absolute;top:50%;right:0%;transform:translate(0%,-50%);-ms-transform:translate(0%,-50%)}
+.w3-display-topmiddle{position:absolute;left:50%;top:0;transform:translate(-50%,0%);-ms-transform:translate(-50%,0%)}
+.w3-display-bottommiddle{position:absolute;left:50%;bottom:0;transform:translate(-50%,0%);-ms-transform:translate(-50%,0%)}
+.w3-display-container:hover .w3-display-hover{display:block}.w3-display-container:hover span.w3-display-hover{display:inline-block}.w3-display-hover{display:none}
+.w3-display-position{position:absolute}
+.w3-circle{border-radius:50%}
+.w3-round-small{border-radius:2px}.w3-round,.w3-round-medium{border-radius:4px}.w3-round-large{border-radius:8px}.w3-round-xlarge{border-radius:16px}.w3-round-xxlarge{border-radius:32px}
+.w3-row-padding,.w3-row-padding>.w3-half,.w3-row-padding>.w3-third,.w3-row-padding>.w3-twothird,.w3-row-padding>.w3-threequarter,.w3-row-padding>.w3-quarter,.w3-row-padding>.w3-col{padding:0 8px}
+.w3-container,.w3-panel{padding:0.01em 16px}.w3-panel{margin-top:16px;margin-bottom:16px}
+.w3-code,.w3-codespan{font-family:Consolas,"courier new";font-size:16px}
+.w3-code{width:auto;background-color:#fff;padding:8px 12px;border-left:4px solid #4CAF50;word-wrap:break-word}
+.w3-codespan{color:crimson;background-color:#f1f1f1;padding-left:4px;padding-right:4px;font-size:110%}
+.w3-card,.w3-card-2{box-shadow:0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)}
+.w3-card-4,.w3-hover-shadow:hover{box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19)}
+.w3-spin{animation:w3-spin 2s infinite linear}@keyframes w3-spin{0%{transform:rotate(0deg)}100%{transform:rotate(359deg)}}
+.w3-animate-fading{animation:fading 10s infinite}@keyframes fading{0%{opacity:0}50%{opacity:1}100%{opacity:0}}
+.w3-animate-opacity{animation:opac 0.8s}@keyframes opac{from{opacity:0} to{opacity:1}}
+.w3-animate-top{position:relative;animation:animatetop 0.4s}@keyframes animatetop{from{top:-300px;opacity:0} to{top:0;opacity:1}}
+.w3-animate-left{position:relative;animation:animateleft 0.4s}@keyframes animateleft{from{left:-300px;opacity:0} to{left:0;opacity:1}}
+.w3-animate-right{position:relative;animation:animateright 0.4s}@keyframes animateright{from{right:-300px;opacity:0} to{right:0;opacity:1}}
+.w3-animate-bottom{position:relative;animation:animatebottom 0.4s}@keyframes animatebottom{from{bottom:-300px;opacity:0} to{bottom:0;opacity:1}}
+.w3-animate-zoom {animation:animatezoom 0.6s}@keyframes animatezoom{from{transform:scale(0)} to{transform:scale(1)}}
+.w3-animate-input{transition:width 0.4s ease-in-out}.w3-animate-input:focus{width:100%!important}
+.w3-opacity,.w3-hover-opacity:hover{opacity:0.60}.w3-opacity-off,.w3-hover-opacity-off:hover{opacity:1}
+.w3-opacity-max{opacity:0.25}.w3-opacity-min{opacity:0.75}
+.w3-greyscale-max,.w3-grayscale-max,.w3-hover-greyscale:hover,.w3-hover-grayscale:hover{filter:grayscale(100%)}
+.w3-greyscale,.w3-grayscale{filter:grayscale(75%)}.w3-greyscale-min,.w3-grayscale-min{filter:grayscale(50%)}
+.w3-sepia{filter:sepia(75%)}.w3-sepia-max,.w3-hover-sepia:hover{filter:sepia(100%)}.w3-sepia-min{filter:sepia(50%)}
+.w3-tiny{font-size:10px!important}.w3-small{font-size:12px!important}.w3-medium{font-size:15px!important}.w3-large{font-size:18px!important}
+.w3-xlarge{font-size:24px!important}.w3-xxlarge{font-size:36px!important}.w3-xxxlarge{font-size:48px!important}.w3-jumbo{font-size:64px!important}
+.w3-left-align{text-align:left!important}.w3-right-align{text-align:right!important}.w3-justify{text-align:justify!important}.w3-center{text-align:center!important}
+.w3-border-0{border:0!important}.w3-border{border:1px solid #ccc!important}
+.w3-border-top{border-top:1px solid #ccc!important}.w3-border-bottom{border-bottom:1px solid #ccc!important}
+.w3-border-left{border-left:1px solid #ccc!important}.w3-border-right{border-right:1px solid #ccc!important}
+.w3-topbar{border-top:6px solid #ccc!important}.w3-bottombar{border-bottom:6px solid #ccc!important}
+.w3-leftbar{border-left:6px solid #ccc!important}.w3-rightbar{border-right:6px solid #ccc!important}
+.w3-section,.w3-code{margin-top:16px!important;margin-bottom:16px!important}
+.w3-margin{margin:16px!important}.w3-margin-top{margin-top:16px!important}.w3-margin-bottom{margin-bottom:16px!important}
+.w3-margin-left{margin-left:16px!important}.w3-margin-right{margin-right:16px!important}
+.w3-padding-small{padding:4px 8px!important}.w3-padding{padding:8px 16px!important}.w3-padding-large{padding:12px 24px!important}
+.w3-padding-16{padding-top:16px!important;padding-bottom:16px!important}.w3-padding-24{padding-top:24px!important;padding-bottom:24px!important}
+.w3-padding-32{padding-top:32px!important;padding-bottom:32px!important}.w3-padding-48{padding-top:48px!important;padding-bottom:48px!important}
+.w3-padding-64{padding-top:64px!important;padding-bottom:64px!important}
+.w3-padding-top-64{padding-top:64px!important}.w3-padding-top-48{padding-top:48px!important}
+.w3-padding-top-32{padding-top:32px!important}.w3-padding-top-24{padding-top:24px!important}
+.w3-left{float:left!important}.w3-right{float:right!important}
+.w3-button:hover{color:#000!important;background-color:#ccc!important}
+.w3-transparent,.w3-hover-none:hover{background-color:transparent!important}
+.w3-hover-none:hover{box-shadow:none!important}
+/* Colors */
+.w3-amber,.w3-hover-amber:hover{color:#000!important;background-color:#ffc107!important}
+.w3-aqua,.w3-hover-aqua:hover{color:#000!important;background-color:#00ffff!important}
+.w3-blue,.w3-hover-blue:hover{color:#fff!important;background-color:#2196F3!important}
+.w3-light-blue,.w3-hover-light-blue:hover{color:#000!important;background-color:#87CEEB!important}
+.w3-brown,.w3-hover-brown:hover{color:#fff!important;background-color:#795548!important}
+.w3-cyan,.w3-hover-cyan:hover{color:#000!important;background-color:#00bcd4!important}
+.w3-blue-grey,.w3-hover-blue-grey:hover,.w3-blue-gray,.w3-hover-blue-gray:hover{color:#fff!important;background-color:#607d8b!important}
+.w3-green,.w3-hover-green:hover{color:#fff!important;background-color:#4CAF50!important}
+.w3-light-green,.w3-hover-light-green:hover{color:#000!important;background-color:#8bc34a!important}
+.w3-indigo,.w3-hover-indigo:hover{color:#fff!important;background-color:#3f51b5!important}
+.w3-khaki,.w3-hover-khaki:hover{color:#000!important;background-color:#f0e68c!important}
+.w3-lime,.w3-hover-lime:hover{color:#000!important;background-color:#cddc39!important}
+.w3-orange,.w3-hover-orange:hover{color:#000!important;background-color:#ff9800!important}
+.w3-deep-orange,.w3-hover-deep-orange:hover{color:#fff!important;background-color:#ff5722!important}
+.w3-pink,.w3-hover-pink:hover{color:#fff!important;background-color:#e91e63!important}
+.w3-purple,.w3-hover-purple:hover{color:#fff!important;background-color:#9c27b0!important}
+.w3-deep-purple,.w3-hover-deep-purple:hover{color:#fff!important;background-color:#673ab7!important}
+.w3-red,.w3-hover-red:hover{color:#fff!important;background-color:#f44336!important}
+.w3-sand,.w3-hover-sand:hover{color:#000!important;background-color:#fdf5e6!important}
+.w3-teal,.w3-hover-teal:hover{color:#fff!important;background-color:#009688!important}
+.w3-yellow,.w3-hover-yellow:hover{color:#000!important;background-color:#ffeb3b!important}
+.w3-white,.w3-hover-white:hover{color:#000!important;background-color:#fff!important}
+.w3-black,.w3-hover-black:hover{color:#fff!important;background-color:#000!important}
+.w3-grey,.w3-hover-grey:hover,.w3-gray,.w3-hover-gray:hover{color:#000!important;background-color:#9e9e9e!important}
+.w3-light-grey,.w3-hover-light-grey:hover,.w3-light-gray,.w3-hover-light-gray:hover{color:#000!important;background-color:#f1f1f1!important}
+.w3-dark-grey,.w3-hover-dark-grey:hover,.w3-dark-gray,.w3-hover-dark-gray:hover{color:#fff!important;background-color:#616161!important}
+.w3-pale-red,.w3-hover-pale-red:hover{color:#000!important;background-color:#ffdddd!important}
+.w3-pale-green,.w3-hover-pale-green:hover{color:#000!important;background-color:#ddffdd!important}
+.w3-pale-yellow,.w3-hover-pale-yellow:hover{color:#000!important;background-color:#ffffcc!important}
+.w3-pale-blue,.w3-hover-pale-blue:hover{color:#000!important;background-color:#ddffff!important}
+.w3-text-amber,.w3-hover-text-amber:hover{color:#ffc107!important}
+.w3-text-aqua,.w3-hover-text-aqua:hover{color:#00ffff!important}
+.w3-text-blue,.w3-hover-text-blue:hover{color:#2196F3!important}
+.w3-text-light-blue,.w3-hover-text-light-blue:hover{color:#87CEEB!important}
+.w3-text-brown,.w3-hover-text-brown:hover{color:#795548!important}
+.w3-text-cyan,.w3-hover-text-cyan:hover{color:#00bcd4!important}
+.w3-text-blue-grey,.w3-hover-text-blue-grey:hover,.w3-text-blue-gray,.w3-hover-text-blue-gray:hover{color:#607d8b!important}
+.w3-text-green,.w3-hover-text-green:hover{color:#4CAF50!important}
+.w3-text-light-green,.w3-hover-text-light-green:hover{color:#8bc34a!important}
+.w3-text-indigo,.w3-hover-text-indigo:hover{color:#3f51b5!important}
+.w3-text-khaki,.w3-hover-text-khaki:hover{color:#b4aa50!important}
+.w3-text-lime,.w3-hover-text-lime:hover{color:#cddc39!important}
+.w3-text-orange,.w3-hover-text-orange:hover{color:#ff9800!important}
+.w3-text-deep-orange,.w3-hover-text-deep-orange:hover{color:#ff5722!important}
+.w3-text-pink,.w3-hover-text-pink:hover{color:#e91e63!important}
+.w3-text-purple,.w3-hover-text-purple:hover{color:#9c27b0!important}
+.w3-text-deep-purple,.w3-hover-text-deep-purple:hover{color:#673ab7!important}
+.w3-text-red,.w3-hover-text-red:hover{color:#f44336!important}
+.w3-text-sand,.w3-hover-text-sand:hover{color:#fdf5e6!important}
+.w3-text-teal,.w3-hover-text-teal:hover{color:#009688!important}
+.w3-text-yellow,.w3-hover-text-yellow:hover{color:#d2be0e!important}
+.w3-text-white,.w3-hover-text-white:hover{color:#fff!important}
+.w3-text-black,.w3-hover-text-black:hover{color:#000!important}
+.w3-text-grey,.w3-hover-text-grey:hover,.w3-text-gray,.w3-hover-text-gray:hover{color:#757575!important}
+.w3-text-light-grey,.w3-hover-text-light-grey:hover,.w3-text-light-gray,.w3-hover-text-light-gray:hover{color:#f1f1f1!important}
+.w3-text-dark-grey,.w3-hover-text-dark-grey:hover,.w3-text-dark-gray,.w3-hover-text-dark-gray:hover{color:#3a3a3a!important}
+.w3-border-amber,.w3-hover-border-amber:hover{border-color:#ffc107!important}
+.w3-border-aqua,.w3-hover-border-aqua:hover{border-color:#00ffff!important}
+.w3-border-blue,.w3-hover-border-blue:hover{border-color:#2196F3!important}
+.w3-border-light-blue,.w3-hover-border-light-blue:hover{border-color:#87CEEB!important}
+.w3-border-brown,.w3-hover-border-brown:hover{border-color:#795548!important}
+.w3-border-cyan,.w3-hover-border-cyan:hover{border-color:#00bcd4!important}
+.w3-border-blue-grey,.w3-hover-border-blue-grey:hover,.w3-border-blue-gray,.w3-hover-border-blue-gray:hover{border-color:#607d8b!important}
+.w3-border-green,.w3-hover-border-green:hover{border-color:#4CAF50!important}
+.w3-border-light-green,.w3-hover-border-light-green:hover{border-color:#8bc34a!important}
+.w3-border-indigo,.w3-hover-border-indigo:hover{border-color:#3f51b5!important}
+.w3-border-khaki,.w3-hover-border-khaki:hover{border-color:#f0e68c!important}
+.w3-border-lime,.w3-hover-border-lime:hover{border-color:#cddc39!important}
+.w3-border-orange,.w3-hover-border-orange:hover{border-color:#ff9800!important}
+.w3-border-deep-orange,.w3-hover-border-deep-orange:hover{border-color:#ff5722!important}
+.w3-border-pink,.w3-hover-border-pink:hover{border-color:#e91e63!important}
+.w3-border-purple,.w3-hover-border-purple:hover{border-color:#9c27b0!important}
+.w3-border-deep-purple,.w3-hover-border-deep-purple:hover{border-color:#673ab7!important}
+.w3-border-red,.w3-hover-border-red:hover{border-color:#f44336!important}
+.w3-border-sand,.w3-hover-border-sand:hover{border-color:#fdf5e6!important}
+.w3-border-teal,.w3-hover-border-teal:hover{border-color:#009688!important}
+.w3-border-yellow,.w3-hover-border-yellow:hover{border-color:#ffeb3b!important}
+.w3-border-white,.w3-hover-border-white:hover{border-color:#fff!important}
+.w3-border-black,.w3-hover-border-black:hover{border-color:#000!important}
+.w3-border-grey,.w3-hover-border-grey:hover,.w3-border-gray,.w3-hover-border-gray:hover{border-color:#9e9e9e!important}
+.w3-border-light-grey,.w3-hover-border-light-grey:hover,.w3-border-light-gray,.w3-hover-border-light-gray:hover{border-color:#f1f1f1!important}
+.w3-border-dark-grey,.w3-hover-border-dark-grey:hover,.w3-border-dark-gray,.w3-hover-border-dark-gray:hover{border-color:#616161!important}
+.w3-border-pale-red,.w3-hover-border-pale-red:hover{border-color:#ffe7e7!important}.w3-border-pale-green,.w3-hover-border-pale-green:hover{border-color:#e7ffe7!important}
+.w3-border-pale-yellow,.w3-hover-border-pale-yellow:hover{border-color:#ffffcc!important}.w3-border-pale-blue,.w3-hover-border-pale-blue:hover{border-color:#e7ffff!important}
+	</style>
+
+
+	
+<style>
+	body { font-family: Arial, sans-serif; background: #444; color: silver; }
+	textarea { width: 100%; height: 100px; }
+	button { margin-top: 10px; }
+	pre { background: #f4f4f4; margin:0px;padding: 4px; white-space: pre-wrap; color: black;}
+
+	.flex-container {
+		display: flex;
+		/*align-items: stretch;*/
+		background-color: #555;
+		flex-wrap: wrap;
+	}
+
+	.flex-container>div {
+		background-color: #607D8B; /*w3-blue-grey*/
+		color: white;
+		width: 23%;
+		margin: 1%;
+		border-radius: 8px 8px 4px 4px ; 
+		padding: 2px;  
+		height: 50px;
+		max-height: 200px;
+		/*overflow:auto;*/
+		/*overflow-x: hidden;  Attiva lo scroll orizzontale */
+		/*overflow-y: scroll;  Disattiva lo scroll verticale */   
+		overflow:hidden; 
+
+
+}
+</style>	
+</head>
+<body onload="getLLMList(); ">
+
+<script>
+var glb_strLLM_index = '1' ; //default
+var glb_strLLM_sel = 'aya'; //default
+
+var glb_row = 0;
+
+var glb_str_timestamp_inizio_chatting = '';
+
+</script>
+
+
+
+<script>
+const mtxA = []; //matrice dei modelli
+const mtxOutput = []; // matrice di output // riempie in base agli elementi
+</script>
+
+<div class="w3-row w3-dark-grey" >
+	<div class="w3-col s4  "><span class="w3-text-amber">One prompt for many local llms</span>
+			<div class="w3-row w3-small" style="padding: 0em; color: grey; ">			
+				<div class="w3-col s2  " style="color: silver;">&nbsp;<i>session</i></div>				
+				<div class="w3-col s4  " style=""><i>start:</i> <span id="elmFase3_centrale_display_1_tot_inizio_label" style="color: silver; "></span></div>
+				<div class="w3-col s4  " style=""><i>end:</i> <span id="elmFase3_centrale_display_2_tot_fine_label" style="color: silver; "></span></div>
+				<div class="w3-col s2  " style=""><i>eta:</i> <span id="elmFase3_centrale_display_3_tot_durata_label" style="color: silver; "></span></div>								
+			</div>		
+	</div>	
+	<div class="w3-col s1  "><span class="w3-button w3-padding-small w3-right w3-purple w3-round w3-small" onClick="fn_salva_sessione();" style="margin: 0.5em; ">save all</span></div>	
+	<div class="w3-col s2  ">&nbsp;</div>	
+	<div class="w3-col s4  ">	
+		<!--  colonna 3 tabs -->
+		<div class="w3-bar w3-black" style=" ">
+			<button class="w3-bar-item w3-button tablink w3-purple" onclick="openOutGrande(event,'Out_pagina_1')"	style=" margin:0px;padding:8px; ">tutti gli output in serie</button>
+			<button class="w3-bar-item w3-button tablink" onclick="openOutGrande(event,'Out_pagina_2')"			style=" margin:0px;padding:8px; ">singolo output di un modello</button>
+			<button class="w3-bar-item w3-button tablink" onclick="openOutGrande(event,'Out_pagina_3')"			style=" margin:0px;padding:8px; "></button>
+		</div>	
+	</div>		
+	<div class="w3-col s1  " style=" text-align:right; "><a href="#" class="w3-bar-item w3-button w3-light-grey w3-small w3-round w3-padding-small" style="margin-top: 0.5em; margin-right: 1.5em; " onclick="document.getElementById('ctn_fase3_step_1_prompt').value = '3+5'; fn_invia_a_tutti_gli_llm_uno_per_volta();">test</a></div>			
+</div>	
+
+
+
+  <div id="output" class="w3-container w3-border " style="margin:0px;padding:0px; ">	
+  
+	<!--  scrive l'elenco degli llm selezionati -->
+	<div class="w3-row" >
+
+		<div class="w3-col s4  " style="border-right:1px solid silver; overflow:auto; height: 88vh; ">
+
+			<div class="w3-row" style="margin: 2%;  width: 96%;">
+				<div class="w3-col s11 " style="">
+					<textarea id="ctn_fase3_step_1_prompt" class="w3-khaki" placeholder="structured prompt&hellip;" style="height: 20vh; border-radius: 8px 0 0 8px ;  "></textarea>						
+				</div>
+				<div class="w3-col s1  " style=""><button type="button" class="w3-button w3-amber " style="margin:0px;padding:0px; width: 100%  ; height: 20vh; border-radius: 0 5px 5px 0; " 
+															onclick="fn_invia_a_tutti_gli_llm_uno_per_volta(); " >&#9654;</button></div>
+			</div>		
+		
+
+			<div id="2_griglia" class="open_fase3_centrale" style="margin-bottom: 20vh; ">
+				<div id="ctn_fase_3_centrale_flex" class="flex-container">
+				  <div style="order: 1">1</div>
+				  <div style="order: 2">2</div>
+				  <div style="order: 3">3</div> 
+				  <div style="order: 4">4</div>
+				  
+				  <div style="order: 4">4</div>
+				  <div style="order: 4">4</div>
+				  <div style="order: 4">4</div>
+				  <div style="order: 4">4</div>
+				</div>
+			</div>	
+			
+
+		</div>
+		
+		<!--  tabella llm -->
+		<div class="w3-col s3  " style="border-right:1px solid silver; overflow:auto; height: 88vh;">
+			
+			<div class="w3-row" style="margin: 2%;  width: 96%; ">
+				<div class="w3-col s4 " style=""><button type="button" class="w3-button w3-padding-small w3-purple w3-round w3-small" style="margin:0px; " onclick="fn_llmtable_copia_in_clipboard()">copy table</button></div>
+				<div class="w3-col s4 " style="">llm model table</div>
+				<div class="w3-col s4 " style="text-align:right; "><button type="button" class="w3-button w3-padding-small w3-amber w3-round w3-small" style="margin:0px; " onclick="fn_llmtable_copia_solo_evaluation_in_clipboard()">copy eval</button></div>
+			</div>
+						
+			<table id="ctn_tab3_table_llms" cellpadding="0" cellspacing="0" border="1" style="width: 96%;  margin: 2%; font-size: 0.8em;  margin-bottom: 20vh;">
+				<tr><td> 
+				<pre id="output_llm">click the button to view installed models.</pre>
+				<button onclick="getLLMList()">show models</button>
+				</td></tr>
+			</table>
+		</div>		
+		
+		<!--  anteprima -->
+		<div class="w3-col s5  " style=""> <!--  parte tre - dx -->
+		
+			<div id="Out_pagina_1" class="w3-container OutGrande" style="display:no ne">
+				<div style=" padding: 0.5em; ">tutti gli output</div>
+				<div id="" class="w3-black w3-medium w3-round-large" style=" overflow:auto; height: 80vh; padding: 0.2em;  "> 
+					<div id="ctn_tutti_gli_output" class="w3-black" style="padding:10px; padding-bottom: 50vh; ">
+						<i>Scrivi il prompt, poi seleziona a quali modelli inviare il prompt, uno per uno verranno interrogati producendo un output visibile nella griglia centrale.
+						<hr>
+						Write the prompt, then select which models to send it to, one by one, they will respond with their output visible in the central grid.
+						</i>
+					</div> 
+				</div>				
+			</div>
+
+			<div id="Out_pagina_2" class="w3-container OutGrande" style="display:none">
+				<!--  titolo e pulsante -->
+				<div class="w3-row" >
+					<div class="w3-col s4  " style=" padding: 0.5em; ">evaluation</div>
+					<div class="w3-col s4  " style=" padding: 0.5em; ">
+						<div id="ctn_fase3_anteprima_label" class="w3-small" style="color: yellow; margin-top: 0.5em; "> llm model name</div>
+					</div>
+					<div class="w3-col s4 " style=" text-align:right; "><span class="w3-bar-item w3-button w3-padding-small w3-black w3-round w3-small" onClick="fn_llmtable_clear_solo_evaluation();" style="margin: 0.5em; ">clear all evaluations</span></div>
+				</div>
+				
+				<!--  input question -->
+				<div class="w3-row">
+					<div class="w3-col s1  " style=""><button type="button" class="w3-button w3-khaki w3-round w3-small" style="margin:0px;padding:4px; margin-top: 0.5em; " onclick="fn_evaluation_clear()">clear</button></div>
+					<div class="w3-col s1  " style="text-align:right; line-height:100%; padding-top: 0.7em; "><span class="" style="font-size: 0.7em;">question</span></div>	
+					<div class="w3-col s10  "><input type="text" id="elm_input_evaluation_question" value="" class="w3-round w3-light-grey" style="margin:4px;padding:4px;  width: 100% ;"></div>					
+				</div>
+
+				<!--  valutazioni 3 colonne -->
+				<div class="w3-row" >
+					<div class="w3-col s4  " style=" padding: 0.2em;">
+						<div class="w3-small" style="color: yellow; ">&nbsp;&nbsp;short description</div>
+						<textarea id="elm_evaluation_text" class="w3-khaki  w3-small" placeholder="note&hellip;" style="height: 13vh; border-radius: 8px ;  "></textarea>					
+					</div>
+					<div class="w3-col s4  " style=" padding: 0.2em;">
+						<div class="w3-small" style="color: yellow; ">&nbsp;&nbsp;how close is</div>
+						<input type="text" id="elm_input_evaluation_temperature_label" value="" class="w3-round w3-light-grey  w3-small" style="margin:0px;padding:4px;  width: 100% ;" placeholder="set attribute&hellip;"><br>
+
+						<form class="w3-container w3-card-4" style="margin:0px;padding:0px; ">
+							<div class="w3-row"  >
+								<div class="w3-col s2  w3-center w3-grey" style=" border-radius: 0 0 0 5px; "><input class="w3-radio" type="radio" name="temperatura" value="0" id="elm_evaluation_radio_1_v_0" checked ><br>0</div>
+								<div class="w3-col s2  w3-center w3-indigo "><input class="w3-radio" type="radio" name="temperatura" value="1" id="elm_evaluation_radio_1_v_1" ><br>1</div>
+								<div class="w3-col s2  w3-center w3-blue"><input class="w3-radio" type="radio" name="temperatura" value="2" id="elm_evaluation_radio_1_v_2" ><br>2</div>
+								<div class="w3-col s2  w3-center w3-lime "><input class="w3-radio" type="radio" name="temperatura" value="3" id="elm_evaluation_radio_1_v_3" ><br>3</div>
+								<div class="w3-col s2  w3-center w3-yellow "><input class="w3-radio" type="radio" name="temperatura" value="4" id="elm_evaluation_radio_1_v_4" ><br>4</div>
+								<div class="w3-col s2  w3-center w3-amber " style=" border-radius: 0 0 5px 0 ; "><input class="w3-radio" type="radio" name="temperatura" value="5" id="elm_evaluation_radio_1_v_5" ><br>5</div>
+							</div>
+						</form>						
+						
+
+
+					
+					</div>
+					<div class="w3-col s4  " style=" padding: 0.2em;">
+						<div class="w3-small" style="color: yellow; ">&nbsp;&nbsp;yes/no attribute</div>					
+						<table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+							<tr><td style=" "><input type="text" id="elm_input_evaluation_checkbox_1_label" value="" class="w3-round w3-light-grey w3-small" style="margin:0px;padding:4px;  width: 100% ;" placeholder="set attribute&hellip;" >
+								</td><td><input id="elm_evaluation_checkbox_1" class="w3-check " type="checkbox" style="margin-top: -0.4em; "></td></tr>
+							<tr><td style=" "><input type="text" id="elm_input_evaluation_checkbox_2_label" value="" class="w3-round w3-light-grey w3-small" style="margin:0px;padding:4px;  width: 100% ;" placeholder="set attribute&hellip;" >
+								</td><td><input id="elm_evaluation_checkbox_2" class="w3-check " type="checkbox" style="margin-top: -0.4em; "></td></tr>
+							<tr><td style=" "><input type="text" id="elm_input_evaluation_checkbox_3_label" value="" class="w3-round w3-light-grey w3-small" style="margin:0px;padding:4px;  width: 100% ;" placeholder="set attribute&hellip;" >
+								</td><td><input id="elm_evaluation_checkbox_3" class="w3-check " type="checkbox" style="margin-top: -0.4em; "></td></tr>
+						</table>					
+					</div>
+				</div>
+		
+				<script>
+				function fn_evaluation_clear() {
+					document.getElementById('elm_evaluation_text').value = ""; 
+					
+					document.getElementById('elm_evaluation_radio_1_v_0').checked = true;
+					
+					document.getElementById('elm_evaluation_checkbox_1').checked = false;
+					document.getElementById('elm_evaluation_checkbox_2').checked = false;
+					document.getElementById('elm_evaluation_checkbox_3').checked = false;
+					
+					fn_update_tabella_llm_field_7(); //aggiorna la tabella
+					fn_update_tabella_llm_field_8(); //aggiorna la tabella
+					fn_update_tabella_llm_field_9(); //aggiorna la tabella
+					fn_update_tabella_llm_field_10(); //aggiorna la tabella
+					fn_update_tabella_llm_field_11(); //aggiorna la tabella
+					
+					document.getElementById('elm_evaluation_text').focus() ;
+				}
+				</script>			
+				
+				<div id="" class="w3-black w3-medium w3-round-large" style=" overflow:auto; height: 57vh; padding: 0.5em; "> 
+					<div id="ctn_anteprima" class="w3-black" style="padding-bottom: 30vh; ">
+						<i>
+						Scrivi il prompt, poi seleziona a quali modelli inviare il prompt, uno per uno verranno interrogati producendo un output visibile nella griglia centrale.
+						<hr>
+						Write the prompt, then select which models to send it to, one by one, they will respond with their output visible in the central grid.					
+						</i>
+					</div> 
+				</div>				
+			</div>
+
+
+
+			<!--  terza pagiona delle tab -->
+			<div id="Out_pagina_3" class="w3-container OutGrande" style="display:none">
+				<h2>Out_pagina_3</h2>
+				<p>Out_pagina_3 is the capital of Japan.</p>
+			</div>
+			 
+			<script>
+			function openOutGrande(evt, OutGrandeName) {
+			  var i, x, tablinks;
+			  x = document.getElementsByClassName("OutGrande");
+			  for (i = 0; i < x.length; i++) {
+				x[i].style.display = "none";
+			  }
+			  tablinks = document.getElementsByClassName("tablink");
+			  for (i = 0; i < x.length; i++) {
+				tablinks[i].className = tablinks[i].className.replace(" w3-purple", "");
+			  }
+			  document.getElementById(OutGrandeName).style.display = "block";
+			  evt.currentTarget.className += " w3-purple";
+			}
+			</script>			
+			
+			
+		</div>		
+	</div>	
+	
+  </div>
+</div>
+
+
+	<script>
+	async function getLLMList() {
+	  const output = document.getElementById("output_llm");
+	  output.textContent = "Caricamento in corso...";
+
+	  try {
+		const response = await fetch("http://localhost:11434/api/tags");
+		if (!response.ok) {
+		  throw new Error("Errore HTTP: " + response.status);
+		}
+		const data = await response.json();
+		const models = data.models.map(m => m.name).join("\n");
+		output.textContent = models || "Nessun modello trovato.";
+		// @ 250415_172306			
+			
+			const arrA = models.split('\n') ;			
+			
+			for (let i = 0; i < arrA.length; i++) {				
+				arrA[i] = arrA[i].replaceAll(":latest" , "" ) ;
+			} 			
+			arrA.sort();
+			
+			for (let i = 0; i < arrA.length; i++) {
+
+				mtxA.push ([ arrA[i] ]) ;				
+				mtxOutput.push ([ arrA[i],'-','-','-','-','-','-','-','0','0','','0','0']);
+			} 			
+			//                 0           1                  2                 3         4         5        6       7             8     ok           9  temp       10   text          11  ok       12 ok
+			//mtxOutput.push(['llm name','timestamp inizio','timestamp fine','durata','lunghezza','testo','status','selezionato','valutazione 1','valutazione 2','valutazione 3'],'valutazione 4','valutazione 5');	
+			
+			// chiama il coso
+			// ok è una matrice console.log( mtxA );
+			fn_hidden_centrale_crea_tabella_e_griglia_output ();
+		
+	  } catch (error) {
+		output.textContent = "Errore durante la richiesta: " + error.message;
+	  }
+	}
+	</script>
+
+
+
+
+
+
+	<script> //centrale tabella ma solo dopo aver ottenuto la matrice 
+	function fn_hidden_centrale_crea_tabella_e_griglia_output () {
+
+		// griglia
+		let strC = '';		
+			for (let j = 0; j < mtxA.length; j++) {			
+				strC += '<div id="elmFlexOut_div_' + (j+1).toString() + '" ' + 	
+							'onClick="fn_chat_in_anteprima(' + j +');"' +
+							'>' ;	
+				strC += '<div class="  " style="color: yellow; font-size: 0.6em; ">' + '<span style="color: white; ">' + (j+1).toString() +'</span>&nbsp;&nbsp;' + mtxA[j][0] +'</div>' ;
+				
+				strC += '<pre id="ctnFlexOut_output_' + j + '" class="w3-khaki" style="font-size: 0.4em; "></pre>' ;
+				strC += '</div>';			
+			}				
+		document.getElementById('ctn_fase_3_centrale_flex').innerHTML = strC; 
+		
+		// '<td>sel</td>' +
+		// <td>st</td>
+		
+		// tabella a sinistra
+		let strTable = '';
+			strTable += '<tr class="w3-light-grey">' + 						
+						'<td id="elm_fase3_tabella_llm_col_check_all"><input id="elm_chk_all" onClick="fn_table_modifica_tutti_i_checkbox();"  class="w3-check" type="checkbox" checked style="margin:0px;padding:0px; margin-top: -0.5em; width:1.5em ;"></td>' +
+						'<td>id</td><td><i>model</i></td>' + 						
+						'<td>eta\'</td><td>eta"</td><td>length</td>' +
+						'<td colspan="5" style=" text-align:center; ">eval</td></tr>';
+			
+		let counterB = 0;
+		for (let k = 0; k < mtxA.length; k++) {			
+
+				//------------------------------------------------------------
+				//scrive nella matrice se l'LLM è stato selezionato
+				mtxOutput[k][7] = '1'; // llm selezionato epr la chat della fase successiva !!!!	
+				//------------------------------------------------------------
+		
+// tolgo questi campi
+// '<td style=" width: 1.5em;" id="elm_fase3_tabella_llm_campo_6_id_' + k +'">' + mtxOutput[k][7] +'</td>' +  campo sel
+// '<td style=" " id="elm_fase3_tabella_llm_campo_2_id_' + k +'">&nbsp;</td>' + campo status
+
+
+				strTable += '<tr onClick="' +
+									'document.getElementById(\'Out_pagina_1\').style.display = \'none\'; ' + 
+									'document.getElementById(\'Out_pagina_2\').style.display = \'block\';  ' +
+									'fn_chat_in_anteprima(' + k +');" id="elm_fase3_tabella_llm_tr_' + k +'" >' + 								
+								'<td style=" width: 2em;" id="elm_fase3_tabella_llm_campo_1_id_' + k +'">' +
+								'<input id="elm_chk_' + k +'" class="w3-check" type="checkbox" checked onClick="fn_mxt_enable_status_write();" style="margin:0px;padding:0px; margin-top: -0.5em; width:1.5em ;"></td>' +
+								'<td id="elmTableOut_tr_id_' + k +'" style="width:2em; text-align:right; padding-right: 0.2em; ">' + (k+1).toString() +'</td>' + 
+								'<td id="elmTableOut_tr_llmname_' + k +'" style=" padding-right: 0.5em; ">' + mtxA[k][0] + '</td>' +													
+								'<td style=" width: 2em; font-size: 0.8em;" id="elm_fase3_tabella_llm_campo_3_id_' + k +'">&nbsp;</td>' +
+								'<td style=" width: 3em; font-size: 0.7em; " id="elm_fase3_tabella_llm_campo_4_id_' + k +'">&nbsp;</td>' +
+								'<td style=" width: 3em; font-size: 0.7em; " id="elm_fase3_tabella_llm_campo_5_id_' + k +'">&nbsp;</td>' +								
+								'<td style=" width: 1.0em;" id="elm_fase3_tabella_llm_campo_7_id_' + k +'">-</td>' +
+								'<td style=" width: 1.0em;" id="elm_fase3_tabella_llm_campo_8_id_' + k +'">-</td>' +
+								'<td style=" width: 1.0em;" id="elm_fase3_tabella_llm_campo_9_id_' + k +'">-</td>' +
+								'<td style=" width: 1.0em;" id="elm_fase3_tabella_llm_campo_10_id_' + k +'">-</td>' +
+								'<td style=" width: 1.0em;" id="elm_fase3_tabella_llm_campo_11_id_' + k +'">-</td>' +
+							'</tr>' ;
+				counterB +=1;
+				
+
+		}
+		
+		document.getElementById('ctn_tab3_table_llms').innerHTML = strTable ;
+		
+		
+	}
+	</script>
+
+
+<!--  
+'<a href="#elmTableOut_tr_1_td_' + (k+1).toString()  + '" ' + 
+'class="w3-button w3-left-align" style="margin:0px;padding:2px; width: 100% ;"' +
+'onClick="fn_chat_in_anteprima(' + k +');" ' + 
+'>'+ mtxA[k][0] +'</a>' +'</td>' +			
+ -->
+
+
+<script>
+function fn_table_modifica_tutti_i_checkbox() {
+ 
+	let elmA = document.getElementById('elm_chk_all');
+	
+	if ( elmA.checked == false ) {
+		for (let i = 0; i < mtxA.length; i++) { document.getElementById('elm_chk_' + i ).checked = false ; }
+	}	
+	else if ( elmA.checked == true ) {
+		for (let i = 0; i < mtxA.length; i++) { document.getElementById('elm_chk_' + i ).checked = true ; }
+	}	
+ 
+	fn_mxt_enable_status_write(); // scrive nella matrice di output quali sono stati selezionati
+ 
+}
+</script>
+
+
+
+<script>
+function fn_mxt_enable_status_write() {
+	// setta llm nella matrice per indicare quali sono gli llm da interrogare
+	let counterA = 0;
+	for (let k = 0; k < mtxA.length; k++) {		
+		let elmA = document.getElementById('elm_chk_' + k);		
+		//console.log( k );
+		if (elmA.checked == true) {
+			mtxOutput[k][7] = '1'; // campo enable
+			counterA +=1 ;			
+			//document.getElementById('elm_fase3_tabella_llm_campo_6_id_' + k).innerHTML = '&#9745;'; 				
+			//cambia il bg degli elementi della griglia selezionati
+			document.getElementById('elmFlexOut_div_' + (k+1).toString() ).style.background = "#607D8B";					
+		
+		} else if (elmA.checked == false) {				
+			mtxOutput[k][7] = '0';						
+			//document.getElementById('elm_fase3_tabella_llm_campo_6_id_' + k).innerHTML = '-';				
+			//cambia il bg degli elementi della griglia non selezionati
+			document.getElementById('elmFlexOut_div_' + (k+1).toString() ).style.background = "#444";
+			
+		}				
+	}
+
+	
+	//console.log( mtxOutput );
+
+}
+</script>
+
+
+
+
+<script>
+function fn_chat_in_anteprima(intIncA) {
+
+	// mostra il contenuto in anteprima e popola i campi valutazione
+
+	glb_strLLM_index = intIncA ;
+	document.getElementById('ctn_anteprima').innerHTML = document.getElementById('ctnFlexOut_output_' + intIncA.toString() ).innerHTML ; 
+	document.getElementById('ctn_fase3_anteprima_label').innerHTML = mtxOutput[(intIncA)][0] ; //label dell'anteprima
+
+	//sezione valutazione
+	document.getElementById('elm_evaluation_text').value = mtxOutput[(intIncA)][10] ; 
+
+	/*
+		 if (mtxOutput[(intIncA)][9] == '-' ) { document.getElementById('elm_evaluation_range_1').value = 0 }
+	else { document.getElementById('elm_evaluation_range_1').value  = mtxOutput[(intIncA)][9] ; }
+	*/
+	if (mtxOutput[(intIncA)][9] == '-' ) { document.getElementById('elm_evaluation_radio_1_v_0').checked = true }
+	else { document.getElementById('elm_evaluation_radio_1_v_' + mtxOutput[(intIncA)][9] ).checked = true }	
+	
+	
+	//console.log( mtxOutput[(intIncA)][8] );
+	// i check box
+		 if (mtxOutput[(intIncA)][8] == '1' ) { document.getElementById('elm_evaluation_checkbox_1').checked = true;  }
+	else if (mtxOutput[(intIncA)][8] == '0' ) { document.getElementById('elm_evaluation_checkbox_1').checked = false; }
+		 if (mtxOutput[(intIncA)][11] == '1' ) { document.getElementById('elm_evaluation_checkbox_2').checked = true;  }
+	else if (mtxOutput[(intIncA)][11] == '0' ) { document.getElementById('elm_evaluation_checkbox_2').checked = false; }
+		 if (mtxOutput[(intIncA)][12] == '1' ) { document.getElementById('elm_evaluation_checkbox_3').checked = true;  }
+	else if (mtxOutput[(intIncA)][12] == '0' ) { document.getElementById('elm_evaluation_checkbox_3').checked = false; }	
+	
+	console.log( mtxOutput[(intIncA)][8] );
+	console.log( mtxOutput[(intIncA)][11] );
+	console.log( mtxOutput[(intIncA)][12] );
+
+	//indica l'elemento selezionato
+	for (let i = 0; i < mtxOutput.length; i++) {
+		document.getElementById('elmTableOut_tr_llmname_' + i ).style.background = "";
+		document.getElementById('elmTableOut_tr_llmname_' + i ).style.color = "silver";
+	} 
+	document.getElementById('elmTableOut_tr_llmname_' + intIncA.toString() ).style.background = "#FFC107";
+	document.getElementById('elmTableOut_tr_llmname_' + intIncA.toString() ).style.color = "black";
+	
+	
+	
+	
+
+}
+</script>	
+
+	<script>
+	function fn_button_sel(strA) {					
+		glb_strLLM_index = strA ;				
+		let intA = Number(strA) ;					
+		glb_strLLM_sel = mtxA[intA][0];					
+		//console.log( glb_strLLM_sel  );					
+		//document.getElementById('elm_strLLM_sel').innerHTML = glb_strLLM_sel; 					
+	}
+	</script>
+
+</div> 
+
+
+
+
+
+
+
+
+
+	<script>
+	var gblCounterA = 0;
+	
+	function fn_invia_a_tutti_gli_llm_uno_per_volta() {
+	
+		gblCounterA  += 1; 
+		
+		if ( gblCounterA == 1 ) {
+			// valorizzo la variabile di inizio attività di chat		
+			glb_str_timestamp_inizio_chatting = fn_servizio_torna_timestamp();	
+			
+			// reset delle label
+			document.getElementById('elmFase3_centrale_display_1_tot_inizio_label').innerHTML = glb_str_timestamp_inizio_chatting ; 
+			document.getElementById('elmFase3_centrale_display_2_tot_fine_label').innerHTML = ''; 
+			document.getElementById('elmFase3_centrale_display_3_tot_durata_label').innerHTML = ''; 
+		}				
+	
+		//console.log( 'gblCounterA: ' + gblCounterA );
+		
+		//console.log( mtxOutput );
+		
+		//sostituisce tutti check nella tabella 
+		// e colora in modo diverso gli elementi della griglia non selezionati ma non li nasconde
+		for (let i = 0; i < mtxOutput.length; i++) {	
+			// solo a quelli selezionati
+			if ( mtxOutput[i][7] == '1' ) {
+				// Sostituisci contenuto della cella togli il cieco e metti l'emoji 
+				document.getElementById('elm_fase3_tabella_llm_campo_1_id_' +i ).innerHTML = "&#9745;"; 
+		
+				
+			}
+			else
+			{ // quelli non selezionati
+				document.getElementById('elm_fase3_tabella_llm_campo_1_id_' +i ).innerHTML = "-"; 
+				
+				//colorare l'intera riga della tabella llm
+				// provo con assegna classe
+				let elmA = document.getElementById('elm_fase3_tabella_llm_tr_'+i);
+					elmA.className = 'w3-black w3-text-blue-grey' ;
+				
+				
+			}
+		}
+		
+		// nasconde anche il checkbox nel titolo della colonna
+		document.getElementById('elm_fase3_tabella_llm_col_check_all').innerHTML = ""; 
+		
+		
+		
+		//clear del contenitore tutte gli output - pronto a ricevere gli poutput in modo incrementale
+		document.getElementById('ctn_tutti_gli_output').innerHTML = ""; 
+		
+		
+		
+		
+		// quando ha fatto torna qua e chiama il successivo finche non li chiama tutti (quelli selezionati)
+		let blnA = true;
+		
+		for (let i = 0; i < mtxOutput.length; i++) {			
+			// solo a quelli selezionati
+			if ( mtxOutput[i][7] == '1' ) {				
+				// colo quelli che non sono stato completati - uso status 100 = non usato, è ilvalore con cui inizia				
+				if ( mtxOutput[i][6] == '-' ) {
+					sendPrompt( i ); // gli passa l'id dell'llm 
+					console.log( 'sendPrompt(' + i +')'  + ' ' + mtxOutput[i][0] ); 
+
+					//fai un giro della matrice aa scrivere gli poutput
+					let  strA = '';
+					for (let k = 0; k < mtxOutput.length; k++) {
+						strA += '<div style=" font-size: 1.0em; color: #F0E68C; border-top:2px solid gray; padding-top: 1.0em; "><i>' + mtxOutput[k][0] +'</i></div>' + '\n' ;
+						strA += mtxOutput[k][5] ;
+						strA += '<br>';
+					}
+					document.getElementById('ctn_tutti_gli_output').innerHTML = strA; 
+
+									
+					
+					blnA = false; // si legge: ho trovato un llm dell'elenco che ancora devo chiamare
+					break; // appena trova il primo si sgancia dal loop
+				}
+			} 
+		}
+		//console.log( blnA );
+		
+		// al completamento scrive anche la durata complessiva della sessione
+		if (blnA == true ) {
+			//alert( 'completato' );
+			console.log( 'finito tutto' );		
+
+			// inizio glb_str_timestamp_inizio_chatting
+			let strT = glb_str_timestamp_inizio_chatting;
+			//i conti con la durata complessiva
+			let strT_fine = fn_servizio_torna_timestamp();			
+			
+			let intT_ora_in_sec = (Number(strT.substring(9, 11))*3600)  + ( Number(strT.substring(11, 13)) *60) + Number(strT.substring(13, 15)) ;				
+			let intT2_ora_in_sec = (Number(strT_fine.substring(9, 11))*3600)  + ( Number(strT_fine.substring(11, 13)) *60) + Number(strT_fine.substring(13, 15)) ;				
+			
+			// console.log( intT_ora_in_sec  + ' ' + intT2_ora_in_sec);
+			
+			let intDiff = intT2_ora_in_sec - intT_ora_in_sec ;
+			
+			console.log( intDiff );				
+			
+			document.getElementById('elmFase3_centrale_display_1_tot_inizio_label').innerHTML = strT; 
+			document.getElementById('elmFase3_centrale_display_2_tot_fine_label').innerHTML = strT_fine; 
+			document.getElementById('elmFase3_centrale_display_3_tot_durata_label').innerHTML = intDiff + '"'; 
+ 			
+			//-----------------------------------------------------------
+			// è finito
+			// copia in clipboard la pagina html risultato
+			fn_salva_sessione();
+			//-----------------------------------------------------------
+			
+		}
+		
+		
+	}
+	</script>
+    <script>
+		// funzione asincrona di invio del prompt con la funzione interrompi
+        let controller;
+		
+        async function sendPrompt(intA) {
+		
+			// intA ricevo l'id dell llm nella matrice
+			let prompt = document.getElementById("ctn_fase3_step_1_prompt").value;	
+					
+			let strT = fn_servizio_torna_timestamp();		
+			/*
+			document.getElementById('output_' + intA.toString() ).textContent += 'inizio: ' + strT + '\n' ;
+			document.getElementById('ctnFlexOut_output_' + intA.toString() ).textContent += 'inizio: ' + strT + '\n' ;
+			*/
+			//console.log( strT.substring(9, 15) ); // 190239 // inizio: 20250402_190239
+			
+				
+            controller = new AbortController();
+            const signal = controller.signal;
+
+
+			//let strM = mtxA[intA][0];
+			let strM = mtxOutput[intA][0];
+			
+			console.log( intA  + ' ' + strM );
+			
+            const requestBody = {
+                model: strM,
+                prompt: prompt,                
+				stream: false
+            };	
+
+			console.log( 'partito' );
+            
+            try {
+                const response = await fetch("http://localhost:11434/api/generate", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    //body: JSON.stringify({ prompt: prompt }),
+					body: JSON.stringify(requestBody),
+                    signal
+                });
+
+                const data = await response.json();
+				
+                if (!response.ok) throw new Error("Errore nella risposta di Ollama");
+                
+				console.log( 'arrivato' );
+
+				// calcola la differena tra start e stop in secondi
+				strT2 = fn_servizio_torna_timestamp();				
+				let intT_ora_in_sec = (Number(strT.substring(9, 11))*3600)  + ( Number(strT.substring(11, 13)) *60) + Number(strT.substring(13, 15)) ;				
+				let intT2_ora_in_sec = (Number(strT2.substring(9, 11))*3600)  + ( Number(strT2.substring(11, 13)) *60) + Number(strT2.substring(13, 15)) ;							
+				let intDiff = intT2_ora_in_sec - intT_ora_in_sec ;
+				console.log( intDiff );
+				str2_ora = strT.substring(9, 15);
+				
+				
+				let strRisposta = data.response;
+				
+				let strTextReplacedLatex = replaceBoldTags(strRisposta);
+				
+				let str1 = strTextReplacedLatex.replaceAll('<think>' , '<br>---think start---<br>');
+				let str2 = str1.replaceAll('</think>' , '<br>---think stop---<br>');
+				let str3 = str2.replaceAll('\n' , '<br>');
+					
+				let strNome = '<div style=" font-size: 1.5em; color: #F0E68C; "><i>' + strM +'</i></div>' + '\n' ; // @ 250419_091756 aggiungo il nome del modello
+				
+				document.getElementById('ctnFlexOut_output_' + intA.toString() ).innerHTML =  strNome + str3 +'\n' || strNome + "Nessuna risposta ricevuta.";				
+				
+				// ok console.log( strNome + str3 +'\n' );
+				
+				// document.getElementById('ctn_tutti_gli_output').innerHTML += strNome + str3 + "\n<hr>\n"; //contenitore con tutti gli poutput
+				
+				//document.getElementById('ctn_tutti_gli_output').innerHTML += intA.toString(); // test
+				
+				// metti l'output finale nella matrice
+				//mtxOutput[intA.toString()] = document.getElementById('output_' + intA.toString() ).textContent ;
+				//new
+				// mtxOutput.push(['llm name','timestamp inizio','timestamp fine','durata','lunghezza','testo','status','valutazione']);
+				//                 0          1                   2                3        4           5       6        7
+				mtxOutput[intA.toString()][0] = strM ;		// llm model name
+				mtxOutput[intA.toString()][1] = strT ;		// start
+				mtxOutput[intA.toString()][2] = strT2 ;		// stop
+				mtxOutput[intA.toString()][3] = intDiff ;	// difference
+				mtxOutput[intA.toString()][4] = str3.length ;	// output length
+				mtxOutput[intA.toString()][5] = str3 ;			// output
+				mtxOutput[intA.toString()][6] = '1' ; // 1 ok	// status complete
+				
+				
+				
+				// aggiorna il campo della tabellallm corrispondente
+				let elmCampo2 = document.getElementById('elmTableOut_tr_id_' + intA.toString() ) ;
+					//elmCampo2.innerHTML 		= '1' ;
+					elmCampo2.style.background 	= 'lightgreen'; 
+					elmCampo2.style.color  		= 'black'; 					
+					
+				let elmCampo3 = document.getElementById('elm_fase3_tabella_llm_campo_3_id_' + intA.toString() ) ;
+					elmCampo3.innerHTML 		= intDiff ;
+					
+
+				let elmCampo4 = document.getElementById('elm_fase3_tabella_llm_campo_4_id_' + intA.toString() ) ;					
+					elmCampo4.innerHTML 		= (parseInt(intDiff/60)).toString() + '\' ' +  ( intDiff - (parseInt(intDiff/60) * 60) ).toString() + '"' ;
+
+				let elmCampo5 = document.getElementById('elm_fase3_tabella_llm_campo_5_id_' + intA.toString() ) ;					
+					elmCampo5.innerHTML 		= strRisposta.length ;
+					
+					
+
+				//controlla se è finito
+				// se tutti hanno inio e fine allora calcola la durata della sessione
+				// ma in una funzione sotto
+				fn_hidden_fine_sessione_controlla();
+				
+				
+
+            } catch (error) {
+				let strErrore = '';
+                if (error.name === "AbortError") {
+                    strErrore = "Operazione interrotta.";
+                } else {
+                    strErrore = "Errore: " + error.message;
+                }
+				
+				
+				strT2 = fn_servizio_torna_timestamp();								
+				let intT_ora_in_sec = (Number(strT.substring(9, 11))*3600)  + ( Number(strT.substring(11, 13)) *60) + Number(strT.substring(13, 15)) ;				
+				let intT2_ora_in_sec = (Number(strT2.substring(9, 11))*3600)  + ( Number(strT2.substring(11, 13)) *60) + Number(strT2.substring(13, 15)) ;							
+				let intDiff = intT2_ora_in_sec - intT_ora_in_sec ;
+				console.log( intDiff );				
+				
+				document.getElementById('ctnFlexOut_output_' + intA.toString() ).textContent += '### ERROR ###\n'  ;
+				document.getElementById('ctnFlexOut_output_' + intA.toString() ).textContent += strErrore ;				
+				
+				
+				// metti l'output finale nella matrice
+				mtxOutput[intA.toString()][0] = strM ;
+				mtxOutput[intA.toString()][1] = strT ;
+				mtxOutput[intA.toString()][2] = strT2 ;
+				mtxOutput[intA.toString()][3] = intDiff ;
+				mtxOutput[intA.toString()][4] = '0' ;
+				mtxOutput[intA.toString()][5] = strErrore ;
+				mtxOutput[intA.toString()][6] = '0' ; // 0 no 
+				
+				// aggiorna il campo della tabellallm corrispondente				
+				let elmCampo2 = document.getElementById('elmTableOut_tr_id_' + intA.toString() ) ;
+					//elmCampo2.innerHTML 		= '0' ;
+					elmCampo2.style.background 	= 'red'; 
+					elmCampo2.style.color  		= 'black'; 					
+					
+				let elmCampo3 = document.getElementById('elm_fase3_tabella_llm_campo_3_id_' + intA.toString() ) ;
+					elmCampo3.innerHTML 		= intDiff ;
+					
+				let elmCampo4 = document.getElementById('elm_fase3_tabella_llm_campo_4_id_' + intA.toString() ) ;					
+					elmCampo4.innerHTML 		= '' ;
+					
+					
+            }
+			
+			
+			console.log( '----------------\n' + intA.toString() + ' ' + mtxA[intA][0] );
+			// ritorna alla funzione 
+			fn_invia_a_tutti_gli_llm_uno_per_volta();
+        }
+    </script>
+    
+    
+	
+	
+	
+	
+	<script>
+	function fn_hidden_fine_sessione_controlla() {
+	
+		// qui vengo a calcolare la durata totale della sessione
+		// controllo lo stato delle celle dove scrivo inizio e fine di ogni chat
+		// se tutte hanno fatto allora calcola dutata 
+		
+		// ok console.log( glb_str_timestamp_inizio_chatting ); // 20250404_081643
+		
+		let blnA = false;
+		
+		for (let i = 0; i < mtxOutput.length; i++) {			
+			
+			// solo sui modelli selezionati per la chat
+			if ( mtxOutput[i][7] == '1' ) {
+			
+				// ok console.log( mtxOutput[i][1] + ' ' + mtxOutput[i][1].length  + ' ' + mtxOutput[i][2] + ' ' + mtxOutput[i][2].length  );
+				
+				if ( mtxOutput[i][1].length == 15 && mtxOutput[i][2].length == 15 ) {				
+					blnA = true;
+					// ok console.log( mtxA[i][0]  + ' ' + blnA );				
+				} else {
+					blnA = false;
+				}
+			}
+			
+		}		
+		
+		console.log( blnA );
+		
+		// se è true, cioè se tutti quanti, allora vado a calcolare
+		let strT_fine = fn_servizio_torna_timestamp();	
+		if (blnA == true) {
+			// inizio glb_str_timestamp_inizio_chatting
+			let strT = glb_str_timestamp_inizio_chatting;
+			
+			let intT_ora_in_sec = (Number(strT.substring(9, 11))*3600)  + ( Number(strT.substring(11, 13)) *60) + Number(strT.substring(13, 15)) ;				
+			let intT2_ora_in_sec = (Number(strT_fine.substring(9, 11))*3600)  + ( Number(strT_fine.substring(11, 13)) *60) + Number(strT_fine.substring(13, 15)) ;				
+			
+			// console.log( intT_ora_in_sec  + ' ' + intT2_ora_in_sec);
+			
+			let intDiff = intT2_ora_in_sec - intT_ora_in_sec ;
+			
+			console.log( intDiff );				
+			
+			document.getElementById('elmFase3_centrale_display_1_tot_inizio_label').innerHTML = strT; 
+			document.getElementById('elmFase3_centrale_display_2_tot_fine_label').innerHTML = strT_fine; 
+			document.getElementById('elmFase3_centrale_display_3_tot_durata_label').innerHTML = intDiff + '"'; 
+			
+		}
+		
+
+	}
+	</script>	
+
+
+
+
+	
+	
+	
+
+<!--  --------------- V A L U T A Z I O N E ---------------------------->
+
+<script>
+// riferimento all'oggetto
+const elm_evaluation_text = document.getElementById('elm_evaluation_text');
+
+// ascolta l'evento e avvia la funzione indicata
+	elm_evaluation_text.addEventListener('change', fn_update_tabella_llm_field_7);
+	elm_evaluation_text.addEventListener('input', fn_update_tabella_llm_field_7);
+
+
+function fn_update_tabella_llm_field_7() {
+	// aggiorna la tabella con alcuni parametri
+	//chi è l'llm selezionato
+	// ok console.log( glb_strLLM_index ); // 19 // ok dinamico
+	let strA = document.getElementById('elm_evaluation_text' ).value;	
+	let strB = '';
+	if (strA.length > 0 ) { strB = 'x'; } else { strB = '-'; }
+	document.getElementById('elm_fase3_tabella_llm_campo_7_id_' + glb_strLLM_index ).innerHTML = strB ;
+	mtxOutput[glb_strLLM_index][10] = strA ;
+}
+</script>
+
+
+
+<script>
+
+// Ottieni un riferimento agli elementi radio con lo stesso nome
+var gruppoRadio    = document.querySelectorAll("input[name='temperatura']");
+
+ // Aggiungi un listener all'evento change
+gruppoRadio.forEach(function(radio)  {
+    radio.addEventListener("change", function()  {
+        // Ottieni il valore del radio selezionato
+        var valoreRadio    = this.value;
+		document.getElementById('elm_fase3_tabella_llm_campo_8_id_' + glb_strLLM_index ).innerHTML = valoreRadio.toString() ;
+		mtxOutput[glb_strLLM_index][9] = valoreRadio.toString() ;
+        console.log(valoreRadio);   // Stampa il valore selezionato nel terminale
+    });
+});
+
+</script>
+
+
+<script>
+/*
+// riferimento all'oggetto
+const elm_evaluation_range_1 = document.getElementById('elm_evaluation_range_1');
+
+// ascolta l'evento e avvia la funzione indicata
+	elm_evaluation_range_1.addEventListener('change', fn_update_tabella_llm_field_8);
+	
+function fn_update_tabella_llm_field_8() {
+	// aggiorna la tabella con alcuni parametri
+	let strA = document.getElementById('elm_evaluation_range_1' ).value;
+	//console.log( strA );	
+	document.getElementById('elm_fase3_tabella_llm_campo_8_id_' + glb_strLLM_index ).innerHTML = strA ; 
+	mtxOutput[glb_strLLM_index][9] = strA ;
+}
+*/
+</script>
+
+
+
+
+
+
+<script>
+// riferimento all'oggetto
+const elm_evaluation_checkbox_1 = document.getElementById('elm_evaluation_checkbox_1');
+
+// ascolta l'evento e avvia la funzione indicata
+	elm_evaluation_checkbox_1.addEventListener('change', fn_update_tabella_llm_field_9);
+	
+function fn_update_tabella_llm_field_9() {
+	// aggiorna la tabella con alcuni parametri
+	let strA = document.getElementById('elm_evaluation_checkbox_1' ).checked;
+	let strB = '';
+	if ( strA == true ) { strB = '1';} else if ( strA == false ) { strB = '0';} 
+	// console.log( strA );	
+	document.getElementById('elm_fase3_tabella_llm_campo_9_id_' + glb_strLLM_index ).innerHTML = strB ; 
+	mtxOutput[glb_strLLM_index][8] = strB ;
+	
+}
+</script>
+
+
+<script>
+// riferimento all'oggetto
+const elm_evaluation_checkbox_2 = document.getElementById('elm_evaluation_checkbox_2');
+
+// ascolta l'evento e avvia la funzione indicata
+	elm_evaluation_checkbox_2.addEventListener('change', fn_update_tabella_llm_field_10);
+	
+function fn_update_tabella_llm_field_10() {
+	// aggiorna la tabella con alcuni parametri
+	let strA = document.getElementById('elm_evaluation_checkbox_2' ).checked;
+	let strB = '';
+	if ( strA == true ) { strB = '1';} else if ( strA == false ) { strB = '0';} 
+	// console.log( strA );	
+	document.getElementById('elm_fase3_tabella_llm_campo_10_id_' + glb_strLLM_index ).innerHTML = strB ; 
+	mtxOutput[glb_strLLM_index][11] = strB ;
+	
+}
+</script>
+
+
+<script>
+// riferimento all'oggetto
+const elm_evaluation_checkbox_3 = document.getElementById('elm_evaluation_checkbox_3');
+
+// ascolta l'evento e avvia la funzione indicata
+	elm_evaluation_checkbox_3.addEventListener('change', fn_update_tabella_llm_field_11);
+	
+function fn_update_tabella_llm_field_11() {
+	// aggiorna la tabella con alcuni parametri
+	let strA = document.getElementById('elm_evaluation_checkbox_3' ).checked;
+	let strB = '';
+	if ( strA == true ) { strB = '1';} else if ( strA == false ) { strB = '0';} 
+	// console.log( strA );	
+	document.getElementById('elm_fase3_tabella_llm_campo_11_id_' + glb_strLLM_index ).innerHTML = strB ; 
+	mtxOutput[glb_strLLM_index][12] = strB ;
+
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+<!--  --------------- C O P I A  T A B E L L A  I N  C L I P B O A R D ---------------------------->
+	
+<script>
+function fn_llmtable_copia_in_clipboard() {
+	
+	// creare una stringa formattata come il file CSV "","",,,"","",,,
+	
+	
+	let strA = '';
+	
+		strA += '"prompt:","' + document.getElementById('ctn_fase3_step_1_prompt').value +'"' ; 
+		strA += '\n' ;
+
+
+		strA += '"timestamp:","' + document.getElementById('elmFase3_centrale_display_1_tot_inizio_label').innerHTML +'"' ; 
+		strA += '\n' ;
+		
+		strA += '"","","","","","","","","question:","' + document.getElementById('elm_input_evaluation_question').value +'"' ; 
+		strA += '\n' ;
+		
+	
+		strA += '\n' ; //separo le due aree
+		
+		strA +=       '"' +  'status' + '"' ;
+		strA += ',' + '"' +  'sel' + '"' ;
+		strA += ',' + '"' +  'eta m' + '"' ;
+		
+		strA += ',' + '"' +  'id' + '"' ;
+		
+		strA += ',' + '"' +  'llm model' + '"' ;		
+		strA += ',' + '"' +  'eta s' + '"' ;				
+		strA += ',' + '"' +  'length' + '"' ;				
+		
+		strA += ',' + '"' +  'output' + '"' ;
+		
+		strA += ',' + '"' +  document.getElementById('elm_input_evaluation_temperature_label').value + '"' ; // temperature
+		strA += ',' + '"' +  document.getElementById('elm_input_evaluation_checkbox_1_label').value + '"' ; // checkbox 1
+		strA += ',' + '"' +  document.getElementById('elm_input_evaluation_checkbox_2_label').value + '"' ; // checkbox 2
+		strA += ',' + '"' +  document.getElementById('elm_input_evaluation_checkbox_3_label').value + '"' ; // checkbox 3
+		strA += ',' + '"' +  'evaluation' + '"' ;
+					
+		strA += '\n' ;
+
+	//                 0           1                  2                 3         4         5        6       7             8                 9              10
+	//mtxOutput.push(['llm name','timestamp inizio','timestamp fine','durata','lunghezza','testo','status','selezionato','valutazione 1','valutazione 2','valutazione 3']);	
+	
+	for (let k = 0; k < mtxOutput.length; k++) {		
+		
+		
+		let intDiff = '-'; if (mtxOutput[k][3] > 0) { let intA = Number(mtxOutput[k][3]); intDiff = (parseInt(intA/60)).toString() + '\' ' +  ( intA - (parseInt(intA/60) * 60) ).toString() } ;
+		
+		
+
+		strA +=       '"' +  mtxOutput[k][6] + '"' ; // status
+		strA += ',' + '"' +  mtxOutput[k][7] + '"' ; // sel
+		strA += ',' + '"' +  intDiff  + '"' ; // eta in minuti e secondi
+		
+		strA += ',' + '"' +  k + '"' ;
+
+		strA += ',' + '"' +  mtxOutput[k][0] + '"' ; //llm name		
+		strA += ',' + '"' +  mtxOutput[k][3] + '"' ; //eta durata in secondi				
+		strA += ',' + '"' +  mtxOutput[k][4] + '"' ; // length		
+
+		strA += ',' + '"' +  mtxOutput[k][5] + '"' ; // output
+
+		strA += ',' + '"' +  mtxOutput[k][9] + '"' ; // index - temperature		
+		strA += ',' + '"' +  mtxOutput[k][8] + '"' ; // ok - checkbox 1
+		strA += ',' + '"' +  mtxOutput[k][11] + '"' ; // ok - checkbox 2
+		strA += ',' + '"' +  mtxOutput[k][12] + '"' ; // ok - checkbox 3
+		
+		strA += ',' + '"' +  mtxOutput[k][10] + '"' ; // evalu - short description
+
+	
+		strA += '\n' ;
+	}
+	
+	
+	navigator.clipboard.writeText( strA ); // copia in clipboard	
+ 
+ 
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+	
+<!--  --------------- C O P I A  S O L O  E V A L U A T I O N - T A B E L L A  I N  C L I P B O A R D ---------------------------->
+	
+<script>
+function fn_llmtable_copia_solo_evaluation_in_clipboard() {
+	
+	// creare una stringa formattata come il file CSV "","",,,"","",,,
+	// solo delle colonne evaluation
+	let strT = fn_servizio_torna_timestamp();
+
+	let strA = '';
+	
+		strA += '"question","' + document.getElementById('elm_input_evaluation_question').value +'"'; 
+		strA += '\n' ;
+		
+		strA += '\n' ;
+		
+		strA +=       '"' +  document.getElementById('elm_input_evaluation_temperature_label').value + '"' ; // temperature
+		strA += ',' + '"' +  document.getElementById('elm_input_evaluation_checkbox_1_label').value + '"' ; // checkbox 1
+		strA += ',' + '"' +  document.getElementById('elm_input_evaluation_checkbox_2_label').value + '"' ; // checkbox 2
+		strA += ',' + '"' +  document.getElementById('elm_input_evaluation_checkbox_3_label').value + '"' ; // checkbox 3
+		strA += ',' + '"' +  'evaluation' + '"' ;
+		
+					
+		strA += '\n' ;
+
+	for (let k = 0; k < mtxOutput.length; k++) {		
+
+		strA +=       '"' +  mtxOutput[k][9] + '"' ; // index - temperature		
+		strA += ',' + '"' +  mtxOutput[k][8] + '"' ; // ok - checkbox 1
+		strA += ',' + '"' +  mtxOutput[k][11] + '"' ; // ok - checkbox 2
+		strA += ',' + '"' +  mtxOutput[k][12] + '"' ; // ok - checkbox 3
+		
+		strA += ',' + '"' +  mtxOutput[k][10] + '"' ; // evalu - short description
+			
+		strA += '\n' ;
+	}
+	
+	
+	navigator.clipboard.writeText( strA ); // copia in clipboard	
+ 
+ 
+}
+</script>
+
+
+
+
+
+
+<!--  --------------- C L E A R  S O L O  E V A L U A T I O N  ---------------------------->
+	
+<script>
+function fn_llmtable_clear_solo_evaluation() {
+	
+	fn_evaluation_clear(); // reset del form della singola valutazione
+	
+	document.getElementById('elm_input_evaluation_question').value = '';
+	
+	document.getElementById('elm_input_evaluation_question').value = '';
+	document.getElementById('elm_input_evaluation_temperature_label').value = '';
+	document.getElementById('elm_input_evaluation_checkbox_1_label').value = '';
+	document.getElementById('elm_input_evaluation_checkbox_2_label').value = '';
+	document.getElementById('elm_input_evaluation_checkbox_3_label').value = '';
+	
+	
+
+	for (let k = 0; k < mtxOutput.length; k++) {		
+
+		// nella matrice
+		mtxOutput[k][8] = '0';
+		mtxOutput[k][9] = '0';
+		mtxOutput[k][10] = 'wait';
+		mtxOutput[k][11] = '0';
+		mtxOutput[k][12] = '0';
+		
+		// nella tabella
+		document.getElementById('elm_fase3_tabella_llm_campo_7_id_' + k ).innerHTML = '0';
+		document.getElementById('elm_fase3_tabella_llm_campo_8_id_' + k ).innerHTML = '0';
+		document.getElementById('elm_fase3_tabella_llm_campo_9_id_' + k ).innerHTML = '0';
+		document.getElementById('elm_fase3_tabella_llm_campo_10_id_' + k ).innerHTML = '0';
+		document.getElementById('elm_fase3_tabella_llm_campo_11_id_' + k ).innerHTML = '0';
+	
+	}
+ 
+ 
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+<!--  --------------- E S P O R T A ---------------------------->
+	
+<script>
+function fn_salva_sessione() {
+
+	// 1. raccoglie il contenuto del prompt builder
+	// 2. aggiunge la matrice output
+	// 3. copia tutto in cliboard come tabella html
+	
+	let inputText = document.getElementById("ctn_fase3_step_1_prompt").value;
+	
+	let strTesto = '';
+	
+	
+	 let strT = fn_servizio_torna_timestamp();
+
+		strTesto += '<!DOCTYPE html>' +'\n'+'\n';
+		strTesto += '<html>' +'\n';
+		strTesto += '<head>' +'\n';
+		strTesto += '<title>One prompt for many local llms - Giulio76 - 250416_091654</title>' +'\n';
+		strTesto += '<meta name="viewport" content="width=device-width, initial-scale=1">' +'\n';
+		strTesto += '' +'\n';
+		strTesto += '<style>' +'\n';
+		strTesto += 'html, body {' +'\n';
+		strTesto += '	background: #555; color: silver; font-size: 0.8em; font-family: verdana; ' +'\n';
+		strTesto += '}' +'\n';
+		strTesto += '</style>' +'\n';
+		strTesto += '</head>' +'\n';
+		strTesto += '<body>' +'\n';
+		
+		strTesto += '<table cellpadding="0" cellspacing="0" border="0" style=" width: 100% ; background: #5E7B89; ">'+'\n';
+		strTesto += '<tr><td valign="top" style=" width: 25em; padding: 4px; "><b>One prompt for many local llms - Giulio76<b><br>sessione del ' + strT + '<br>' +
+						'inizio: ' + document.getElementById('elmFase3_centrale_display_1_tot_inizio_label').innerHTML  + '<br>' +
+						'fine: ' + document.getElementById('elmFase3_centrale_display_2_tot_fine_label').innerHTML  + '<br>' +
+						'durata: ' + document.getElementById('elmFase3_centrale_display_3_tot_durata_label').innerHTML  + '<br>' +	'</td>' +'\n';		
+					
+		strTesto += '<td valign="top" >prompt<br>'+'\n';
+		strTesto += '<div id="" class="" style="word-break: break-all; width:95%; background: black; color: white;  padding: 4px; font-size: 1.25em; height: 5em; overflow:auto; ">' + inputText + '</div>' + '\n\n' ;
+		strTesto += '</td>'+'\n';
+
+		strTesto += '<td valign="top" style=" width: 50%; padding: 4px; "></td>'+'\n';
+		
+		strTesto += '</tr>'+'\n';
+		strTesto += '</table>' +'\n';
+	
+		
+		
+		strTesto += '<br>'+'\n';
+		
+		strTesto += '<table cellpadding="0" cellspacing="0" border="1" style="background: #5E7B89; width: 100% ;">' + 
+						'<tr><td style=" width: 50% ;" valign="top" >'+'\n';
+
+			strTesto += '<div id="" class="" style="font-size: 1.5em; ">llms table</div>';
+
+			strTesto += '<div style="height: 70vh; overflow:auto;">' ;
+			
+			strTesto += '<table cellpadding="0" cellspacing="0" border="1" style="background: #5E7B89; width: 100% ;">'+'\n';
+			
+			strTesto += '<tr style=" background: lightgray; color: black; "><td>llm name</td><td>tempo</td><td>tempo</td><td>lungh</td><td>status</td><td>testo</td><td> </td><td>valutazione</td><td>valore</td><td>ok</td><td>nome llm</td></tr>'+'\n';
+			
+		for (let k = 0; k < mtxOutput.length; k++) {
+			
+			let strTrStyle	= ''+'\n';
+		
+			if ( mtxOutput[k][6] == '1' ) { strTrStyle = 'background: #FFC107; color: black; '+'\n'; }
+		
+			strTesto += '<tr style="' + strTrStyle +'">'+'\n';
+			
+			let intDiff = mtxOutput[k][3];
+
+
+			//nome llm
+			strTesto += '<td style="white-space: nowrap;">' + mtxOutput[k][0] + '</td>'+'\n';
+			//durata in minuti
+			strTesto += '<td style="white-space: nowrap;">' + (parseInt(intDiff/60)).toString() + '\' ' +  ( intDiff - (parseInt(intDiff/60) * 60) ).toString() + '</td>'+'\n';
+			//durata in secondi
+			strTesto += '<td style="white-space: nowrap;">' + mtxOutput[k][3] + '</td>'+'\n';
+			//lunghezza in caratteri
+			strTesto += '<td style="white-space: nowrap;">' + mtxOutput[k][4] + '</td>'+'\n';
+
+			//status
+			strTesto += '<td style="white-space: nowrap;">' + mtxOutput[k][6] + '</td>'+'\n';
+
+			//btn testo copia in clipboard
+			if ( mtxOutput[k][7] == '1' ) { 	
+				strTesto += '<td style="white-space: nowrap;">' + 
+						'<button type="button" onclick="fn_hidden_blocco_indicato_copia_con_stile(\'output_chat_' + k +'\')" style=" margin:0px;padding:2px; font-size: 0.7em; ">copia</button>' + '</td>'+'\n';
+			} else {
+				strTesto += '<td>&nbsp;</td>'+'\n';
+			}		
+
+			//
+			strTesto += '<td style="white-space: nowrap;">' + mtxOutput[k][7] + '</td>'+'\n';
+			
+			//valutazione
+			strTesto += '<td style="white-space: nowrap;">' + mtxOutput[k][8] + '</td>'+'\n';
+			
+			//valutazione
+			strTesto += '<td style="white-space: nowrap;">' + mtxOutput[k][9] + '</td>'+'\n';
+			
+			//valutazione
+			strTesto += '<td style="white-space: nowrap;">' + mtxOutput[k][10] + '</td>'+'\n';
+			
+			
+			
+			//ripeto il nome del modello
+			strTesto += '<td style="white-space: nowrap;">'+'\n';
+			strTesto += '<button type="button" onclick="window.location.href = \'#' + mtxOutput[k][0] +'\' ;" style=" border:0px solid black; background: #333; color: silver;  width: 100% ; text-align:right; padding: 0.5em; ">' + mtxOutput[k][0] + '</button>' ;
+			strTesto += '</td>'+'\n';
+			
+		
+			strTesto += '</tr>'+'\n';
+		}   
+			
+			strTesto += '</table>' +'\n';
+			
+			strTesto += '</div>' ;
+	
+		strTesto += '</td><td valign="top" ><div id="" class="" style="text-align:right; ">' + 
+					'<button type="button" onclick="fn_hidden_blocco_indicato_copia_con_stile(\'output_1\');">seleziona tutto il testo</button>' + 
+					'</div><div id="output_1" class="" style="word-break: break-all; background: black; color: white; font-size: 1.5em; overflow:auto; height: 60vh; line-height: 176%; padding: 1.5em;  " >' +'\n';
+		
+		
+		//pagina unica
+		
+		//aggiungo tema della valutazione
+		strTesto += 'evaluation - short description:<br>' + document.getElementById('elm_input_evaluation_question').value  + '<hr>' +'\n';
+		
+		//aggiungo il prompt
+		strTesto += '<div style="color: #FFC107;">prompt:</div><i>' + inputText + '</i><hr>' +'\n';
+		
+		for (let k = 0; k < mtxOutput.length; k++) {
+			if ( mtxOutput[k][7] == '1' ) { 
+		
+				strTesto += '<div id="' + mtxOutput[k][0] + '" style="color: #FFC107; border-bottom:2px solid silver; padding-top: 0.5em; padding-bottom: 0.5em; ">' + mtxOutput[k][0] + '</div>' + mtxOutput[k][5] + '<br>'  +'\n';
+		
+			}
+		}
+		
+		strTesto += '</div></td></tr></table>' +'\n';
+		
+		
+		strTesto += '<br>\n<br>\n' ;
+
+		//colonne
+		
+		for (let k = 0; k < mtxOutput.length; k++) {
+			if ( mtxOutput[k][7] == '1' ) { 		
+				strTesto += '<div id="output_chat_' + k +'" class="" style="display:none; ">' + 
+							'<h5 style="color: #FFC107; ">' + mtxOutput[k][0] + ' </h5>' + 
+							inputText + '<hr>' + mtxOutput[k][5] + '</div>' +'\n';
+			}
+		}
+
+
+
+		strTesto += '<' + 'script>' +'\n'+ 
+						'function fn_hidden_blocco_indicato_copia_con_stile(strIncA) {' +'\n'+
+						'let elemento = document.getElementById(strIncA);' +'\n'+
+						'// Creiamo un Range (intervallo di selezione)' +'\n'+
+						'const range = document.createRange();' +'\n'+
+						'range.selectNodeContents(elemento);' +'\n'+
+						'// Otteniamo la selezione corrente e la svuotiamo' +'\n'+
+						'const sel = window.getSelection();' +'\n'+
+						'sel.removeAllRanges();' +'\n'+
+						'sel.addRange(range);' +'\n'+
+						'try {' +'\n'+
+						'// Eseguiamo il comando di copia' +'\n'+
+						'const successo = document.execCommand(\'copy\');' +'\n'+
+						'if (successo) {' +'\n'+
+						'alert("Testo copiato con stile!");' +'\n'+
+						'} else {' +'\n'+
+						'alert("Errore durante la copia.");' +'\n'+
+						'}' +'\n'+
+						'} catch (err) {' +'\n'+
+						'alert("Copia non supportata dal browser.");' +'\n'+
+						'}' +'\n'+
+						'// Puliamo la selezione per non lasciarla visibile' +'\n'+
+						'sel.removeAllRanges();' +'\n'+
+						'}'+
+					'<' + '/script>'+'\n';
+
+
+
+
+		strTesto += '</body>' +'\n';
+		strTesto += '</html>';  
+		
+	//navigator.clipboard.writeText( strTesto ); // copia in clipboard	
+	//diventa salva
+	// Contenuto da salvare — può essere anche codice HTML
+	// Creazione del blob
+	let blob = new Blob([strTesto], { type: "text/html" });
+
+	
+	// Creazione link temporaneo per download
+	let link = document.createElement("a");
+	link.href = URL.createObjectURL(blob);
+	link.download = strT + " llms evaluation" + ".html";
+	link.click();
+
+	// Pulizia
+	URL.revokeObjectURL(link.href);
+
+
+ 
+}
+</script>	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+<!-- ----- FUNZIONI DI SERVIZIO ------------------------------------------------------------------- -->
+<script>
+function fn_servizio_torna_timestamp() {
+
+	// aggiorna la data
+	let adesso = new Date();
+	let anno = adesso.getFullYear();
+	//let anno_text = String(anno);
+	//let anno_padded = anno_text.padStart(2,"0");
+	
+	let mese = adesso.getMonth() +1;
+	let mese_text = String(mese);
+	let mese_padded = mese_text.padStart(2,"0");	
+	
+	let giorno = adesso.getDate();
+	let giorno_text = String(giorno);
+	let giorno_padded = giorno_text.padStart(2,"0");	
+	
+	let ore = adesso.getHours(); 
+	let ore_text = String(ore);
+	let ore_padded = ore_text.padStart(2,"0");			
+	
+	let minuti = adesso.getMinutes(); // Ottieni i minuti (senza "AM/PM") // 21			
+	let minuti_text = String(minuti);
+	let minuti_padded = minuti_text.padStart(2,"0");
+	
+	
+	let secondi = adesso.getSeconds();
+	let secondi_text = String(secondi);
+	let secondi_padded = secondi_text.padStart(2,"0");
+	
+	return anno + '' + mese_padded + '' + giorno_padded + '_' + ore_padded + '' + minuti_padded + '' + secondi_padded ;
+	
+	//come si usa --------------
+	// let strT = fn_servizio_torna_timestamp();
+	// console.log( strT);
+}
+
+
+
+
+function replaceBoldTags(text) {
+    // Espressione regolare per trovare le parole tra due asterischi
+    const regex = /\*\*(.*?)\*\*/g;
+    
+    // Funzione di sostituzione che costruisce il tag HTML
+    const replacementFunction = (match, p1) => {
+        return `<b>${p1}</b>`;
+    };
+    
+    // Esegui la sostituzione usando l'espressione regolare e la funzione di sostituzione
+    const resultText = text.replace(regex, replacementFunction);
+    
+    return resultText;
+}
+// let strTextReplacedLatex = replaceBoldTags(stringa);
+
+
+
+
+
+function fn_hidden_blocco_indicato_copia_con_stile(strIncA) {
+    
+  let elemento = document.getElementById(strIncA);
+
+  // Creiamo un Range (intervallo di selezione)
+  const range = document.createRange();
+  range.selectNodeContents(elemento);
+
+  // Otteniamo la selezione corrente e la svuotiamo
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+
+  try {
+    // Eseguiamo il comando di copia
+    const successo = document.execCommand('copy');
+    if (successo) {
+      alert("Testo copiato con stile!");
+    } else {
+      alert("Errore durante la copia.");
+    }
+  } catch (err) {
+    alert("Copia non supportata dal browser.");
+  }
+
+  // Puliamo la selezione per non lasciarla visibile
+  sel.removeAllRanges();
+}
+
+
+
+
+
+</script>
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+	
+</body>
+</html>
+
+
